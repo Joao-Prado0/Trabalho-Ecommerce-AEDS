@@ -1,0 +1,7 @@
+Vendas 
+
+Codigo de Venda: ,
+Codigo do Produto: ,
+Quantidade: ,
+Preco Un: ,
+Preco Total: ,

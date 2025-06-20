@@ -1,1 +1,16 @@
-Opa tudo bom
+Vendedores:
+
+Codigo: 123,
+Nome: Joao Prado Campos,
+Salario: 2500.00,
+Comissão: ,
+
+Codigo: 257,
+Nome: Daniel de Cesar Rodrigues,
+Salario: 1740.00,
+Comissão: ,
+
+Codigo: 419,
+Nome: Eduardo Paes Oliveira,
+Salario: 2150.00,
+Comissão: ,
