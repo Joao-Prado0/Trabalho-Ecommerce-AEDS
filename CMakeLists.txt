@@ -5,4 +5,6 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_executable(SistemaComercioEletronico
     src/main.cpp
+        src/vendedores.cpp
+        src/vendas.cpp
 )
