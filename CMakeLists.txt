@@ -7,4 +7,6 @@ add_executable(SistemaComercioEletronico
     src/main.cpp
         src/vendedores.cpp
         src/vendas.cpp
+        src/compradores.cpp
+        src/compradores.h
 )
