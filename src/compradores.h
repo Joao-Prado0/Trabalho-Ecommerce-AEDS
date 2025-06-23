@@ -31,6 +31,13 @@ public:
     void setEmail(const string& novoEmail) { email = novoEmail; }
     void setCpf(const string& novoCpf) { cpf = novoCpf; }
 
+    void exibir() const {
+        cout << "ID: " << id << endl;
+        cout << "Nome: " << nome << endl;
+        cout << "Email: " << email << endl;
+        cout << "CPF: " << cpf << endl;
+    }
+
 };
 
 
