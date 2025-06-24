@@ -1,4 +1,5 @@
 #include <iostream>
+#include "produtos.h"
 using namespace std;
 
 void submenu_produtos() {
@@ -15,16 +16,16 @@ void submenu_produtos() {
         cin.ignore();
         switch(opcao) {
             case 1:
-                cout << "Cadastrar Produto (implementar)" << endl;
+                cadastrarProduto();
                 break;
             case 2:
-                cout << "Consultar Produto (implementar)" << endl;
+                consultarProduto();
                 break;
             case 3:
-                cout << "Alterar Produto (implementar)" << endl;
+                alterarProduto();
                 break;
             case 4:
-                cout << "Excluir Produto (implementar)" << endl;
+                excluirProduto();
                 break;
             case 0:
                 break;
@@ -156,6 +157,9 @@ void submenu_realizar_venda() {
     } while (!vendedor)
 }
 int main() {
+    // Carregar dados dos produtos ao iniciar o programa
+    carregarProdutos();
+    
     int opcao;
     do {
         cout << "\n===== MENU PRINCIPAL =====" << endl;
