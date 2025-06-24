@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-void submenuProdutos() {
+void submenu_produtos() {
     int opcao;
     do {
         cout << "\n--- Gerenciar Produtos ---" << endl;
@@ -34,7 +34,7 @@ void submenuProdutos() {
     } while(opcao != 0);
 }
 
-void submenuVendedores() {
+void submenu_vendedores() {
     int opcao;
     do {
         cout << "\n--- Gerenciar Vendedores ---" << endl;
@@ -67,7 +67,7 @@ void submenuVendedores() {
     } while(opcao != 0);
 }
 
-void submenuCompradores() {
+void submenu_compradores() {
     int opcao;
     do {
         cout << "\n--- Gerenciar Compradores ---" << endl;
@@ -100,7 +100,7 @@ void submenuCompradores() {
     } while(opcao != 0);
 }
 
-void submenuVendas() {
+void submenu_vendas() {
     int opcao;
     do {
         cout << "\n--- Gerenciar Vendas ---" << endl;
@@ -124,7 +124,37 @@ void submenuVendas() {
         }
     } while(opcao != 0);
 }
-
+void submenu_realizar_venda() {
+    int codigoProduto,codigoVendedor,cpfComprador,quantidadeProduto;
+    bool usuario = false, vendedor = false;
+    do {
+        cout << "Informe seu CPF:" << endl;
+        cin >> cpfComprador;
+        if (validar_cpf(cpfComprador)) {
+            usuario = true;
+            //chamar função da classe vendas
+        } else {
+            cout << "Insira um cpf valido" << endl;
+        }
+    } while (!usuario);
+    do {
+        //imprimir todos os produtos disponíveis
+        cout <<"Insira codigo do produto desejado (caso deseje finalizar a compra insira 0):"<<endl;
+        cin >> codigoProduto;
+        if (validar_produto(codigoProduto)) {
+            cout <<"Insira quantas unidades desejadas:"<<endl;
+            cin >> quantidadeProduto;
+            // inicializar objeto na classe vendas
+        } else {
+            cout << "Insira um codigo valido" << endl;
+        }
+        system("cls");
+    } while (codigoProduto!=0);
+    do {
+        // imprimir todos os vendedores (direto pelo arquivo)
+        cout << "Insira o codigo do vendedor que te atendeu"
+    } while (!vendedor)
+}
 int main() {
     int opcao;
     do {
@@ -133,26 +163,26 @@ int main() {
         cout << "2. Gerenciar Vendedores" << endl;
         cout << "3. Gerenciar Compradores" << endl;
         cout << "4. Gerenciar Vendas" << endl;
-        cout << "5. Emitir Nota Fiscal" << endl;
+        cout << "5. Realizar Compra" << endl;
         cout << "0. Sair" << endl;
         cout << "Escolha uma opcao: ";
         cin >> opcao;
         cin.ignore();
         switch(opcao) {
             case 1:
-                submenuProdutos();
+                submenu_produtos();
                 break;
             case 2:
-                submenuVendedores();
+                submenu_vendedores();
                 break;
             case 3:
-                submenuCompradores();
+                submenu_compradores();
                 break;
             case 4:
-                submenuVendas();
+                submenu_vendas();
                 break;
             case 5:
-                cout << "Emitir Nota Fiscal (implementar)" << endl;
+                submenu_realizar_venda();
                 break;
             case 0:
                 cout << "Saindo..." << endl;

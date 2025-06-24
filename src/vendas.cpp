@@ -21,31 +21,41 @@ void Vendas::setCodigoVenda() {
 void Vendas::aicionar_item(int codigoItem,int quant) {
     Produtos item = Produtos::buscar_codigo_produto(codigoItem);
     ItemVenda produtoSolicitado;
-    produtoSolicitado.codigoProduto = codigoItem;
-    produtoSolicitado.nomeProduto = item.nome;
-    produtoSolicitado.precoUnitario = item.preco;
     if (verificar_estoque(codigoItem,quant)) {
         produtoSolicitado.quantidadeVendida = quant;
         produtoSolicitado.precoTotal = item.preco * quant;
+        produtoSolicitado.codigoProduto = codigoItem;
+        produtoSolicitado.nomeProduto = item.nome;
+        produtoSolicitado.precoUnitario = item.preco;
+    } else {
+        cout << "O produto: "<<item.nome<<". Esta esgotado"<<endl;
     }
-
-
 }
-bool Vendas::verificar_estoque(int codigoP, int quant) {
-    Produtos produtoSolicitado = getProduto(codigoP);
+bool Vendas::verificar_estoque(int codigoItem, int quant) {
+    Produtos produtoSolicitado = getProduto(codigoItem);
     if (quant<=produtoSolicitado.estoque) {
-        produtoSolicitado-quant;
-        quantidade = quant;
-        calcular_preco(quant,produtoSolicitado);
+        Produtos.diminuir_estoque(quant);
+        return true;
     }
-
+    return false;
 }
 void Vendas::calcular_preco(int quant, Produtos produtoSolicitado) {
     float precoU = produtoSolicitado.getPreco();
     precoUnidade = precoU;
     precoTotal = precoU*quant;
 }
-
+Vendas Vendas::consultar_venda(int codigoV) {
+    // Vai retornar objeto da classe venda com todas as informações ou imprimir as informações na tela (decidir depois)
+}
+void Vendas::alterar_venda(int codigoV) {
+    //Alteração de venda, buscar no arquivo pelo codigo
+}
+void Vendas::deletar_venda(int codigoV) {
+    //Deletar venda, consultar no arquivo pelo codigo
+}
+void Vendas::inserir_venda_manualmente() {
+    //Não sei qual o sentido dessa, vou perguntar
+}
 int main() {
     return 0;
 }

@@ -9,11 +9,13 @@ struct ItemVenda{
     string nomeProduto;
     int quantidadeVendida;
     float precoUnitario;
-    float precoTotal;};
+    float precoTotal;
+};
 
 class Vendas {
     private:
         int codigoVenda;
+        int codigoVendedor;
         string nomeComprador;
         float valorTotal;
         float frete;
@@ -26,6 +28,14 @@ class Vendas {
         void aicionar_item(int codigoItem, int quant);
 
         void calcular_preco(int quant,Produtos produtoSolicitado);
+
+        Vendas consultar_venda(int codigoV);
+
+        void alterar_venda(int codigoV);
+
+        void deletar_venda(int codigoV);
+
+        void inserir_venda_manualmente();
 
         bool verificar_estoque(int codigo, int quant);
 };

@@ -1,7 +1,17 @@
-Vendas 
-
-Codigo de Venda: ,
-Codigo do Produto: ,
-Quantidade: ,
-Preco Un: ,
-Preco Total: ,
+Venda:
+Codigo: 101
+Comprador: João Prado
+Itens:
+ - Codigo: 10 | Nome: Teclado | Qtd: 2 | Unitário: 100.00 | Total: 200.00
+ - Codigo: 12 | Nome: Mouse   | Qtd: 1 | Unitário: 80.00  | Total: 80.00
+Frete: 20.00
+Valor Total: 300.00
+---
+Venda:
+Codigo: 102
+Comprador: Maria Silva
+Itens:
+ - Codigo: 11 | Nome: Monitor | Qtd: 1 | Unitário: 900.00 | Total: 900.00
+Frete: 0.00
+Valor Total: 900.00
+---
