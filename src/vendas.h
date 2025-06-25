@@ -22,6 +22,8 @@ class Vendas {
         vector<ItemVenda> itens;
 
     public:
+        Vendas();
+
         Vendas(int codigoP, int quant);
         void setCodigoVenda();
 
@@ -35,7 +37,7 @@ class Vendas {
 
         void deletar_venda(int codigoV);
 
-        void inserir_venda_manualmente();
+        void inserir_venda_manualmente(int codigoV,int codigoVR, string nomeC, float valorT,vector<ItemVenda> produtos);
 
         bool verificar_estoque(int codigo, int quant);
 };

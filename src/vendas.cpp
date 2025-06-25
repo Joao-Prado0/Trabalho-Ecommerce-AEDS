@@ -7,7 +7,7 @@
 #include <ctime>
 #include <cstdlib>  // Para rand() e srand()
 using namespace std;
-
+Vendas::Vendas(){}
 Vendas::Vendas(int codigoP, int quant) {
     verificar_estoque(codigoP,quant);
 }
@@ -53,7 +53,7 @@ void Vendas::alterar_venda(int codigoV) {
 void Vendas::deletar_venda(int codigoV) {
     //Deletar venda, consultar no arquivo pelo codigo
 }
-void Vendas::inserir_venda_manualmente() {
+void Vendas::inserir_venda_manualmente(int codigoV,int codigoVR, string nomeC, float valorT,vector<ItemVenda> produtos) {
     //Não sei qual o sentido dessa, vou perguntar
 }
 int main() {
