@@ -1,7 +1,8 @@
 Produtos
 Codigo    Nome do Produto                    Estoque    Preco (R$)
 ------    --------------------------------    -------    ----------
-1001      Smartphone Samsung Galaxy S23           10     3999.90
-1002      Notebook Dell Inspiron 15                5     4599.00
-1003      Fone Bluetooth JBL Tune 520             10      349.99
-1004      Smartwatch Amazfit GTS 4 Mini           10      799.90
+1001        Smartphone Samsung Galaxy S               10       3999.90
+1002        Notebook Dell Inspiron                    20       4599.00
+1003        Fone Bluetooth JBL Tune                  520       349.99
+1004        Smartwatch Amazfit GTS                     4       799.90
+
