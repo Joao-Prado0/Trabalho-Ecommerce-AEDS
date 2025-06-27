@@ -26,14 +26,15 @@ class Vendas {
     public:
         Vendas();
 
-        Vendas(int codigoP, int quant);
-        void setCodigoVenda();
+        Vendas(int codigoP);
+
+        int criar_codigoVenda();
+
+        bool verificar_codigo(int codigo);
 
         Vendas inicializar_com_codigo(int codigoV);
 
         void aicionar_item(int codigoItem, int quant);
-
-        void calcular_preco(int quant);
 
         void consultar_venda(int codigoV);
 
@@ -43,9 +44,11 @@ class Vendas {
 
         void deletar_venda(int codigoV);
 
-        void inserir_venda_manualmente(int codigoV,int codigoVR, string nomeC, float valorT,ItemVenda *produtos);
+        void inserir_venda_manualmente();
 
         bool verificar_estoque();
+
+        float calcular_frete(float valorT);
 };
 
 #endif

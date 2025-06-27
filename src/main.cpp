@@ -118,46 +118,8 @@ void submenu_vendas(Vendas venda) {
         cin.ignore();
         switch(opcao) {
             case 1:
-                int diferentesProdutos,codigoVendedor;
-                float valorTotal;
-                string nomeComprador;
-                cout << "Insira o codigo da venda" << endl;
-                cin >> codigoVenda;
-                cout << "Quantos produtos diferentes foram comprados" << endl;
-                cin >> diferentesProdutos;
-                if (diferentesProdutos>1) {
-                    auto *produtos = new ItemVenda[diferentesProdutos];
-                    for (int i=0;i<diferentesProdutos;i++) {
-                        cout<<"Insira o codigo do produto"<<endl;
-                        cin >> produtos[i].codigoProduto;
-                        cout<<"Insira o nome do produto"<<endl;
-                        cin >> produtos[i].nomeProduto;
-                        cout<<"Insira a quantidade vendida do produto"<<endl;
-                        cin >> produtos[i].quantidadeVendida;
-                        cout<<"Insira o preco unitario do produto"<<endl;
-                        cin >> produtos[i].precoUnitario;
-                    }
-                } else if (diferentesProdutos==1) {
-                    auto *produtos = new ItemVenda[1];
-                    cout<<"Insira o codigo do produto:"<<endl;
-                    cin >> produtos[0].codigoProduto;
-                    cout<<"Insira o nome do produto:"<<endl;
-                    cin >> produtos[0].nomeProduto;
-                    cout<<"Insira a quantidade vendida do produto:"<<endl;
-                    cin >> produtos[0].quantidadeVendida;
-                    cout<<"Insira o preco unitario do produto:"<<endl;
-                    cin >> produtos[0].precoUnitario;
-                } else {
-                    cout << "Numero invalido." << endl;
-                    break;
-                }
-                cout<<"Insira o nome do comprador: "<<endl;
-                cin >> nomeComprador;
-                cout<<"Insira o codigo do vendedor: "<<endl;
-                cin >> codigoVendedor;
-                cout<<"Insira o valor total da compra: "<<endl;
-                cin >> valorTotal;
-                venda.inserir_venda_manualmente(codigoVenda,codigoVendedor,nomeComprador,valorTotal,produtos);
+                venda.inserir_venda_manualmente();
+                break;
             case 2:
                 cout << "Insira o codigo da venda (ou 0 para voltar)" << endl;
                 cin >> codigoVenda;

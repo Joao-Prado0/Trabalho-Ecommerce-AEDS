@@ -6,16 +6,42 @@
 #include <fstream>
 #include <ctime>
 #include <cstdlib>  // Para rand() e srand()
+#include <utility>
 using namespace std;
 Vendas::Vendas(){}
-Vendas::Vendas(int codigoP, int quant) {
-    verificar_estoque();
+Vendas::Vendas(int codigoV,int codigoVR, string nome, float valorT, ItemVenda *itens, int quant) {
+    codigoVenda = codigoV;
+    codigoVendedor = codigoVR;
+    nomeComprador = std::move(nome);
+    auto *produtosInseridos = new ItemVenda[quant];
+    for (int i=0; i<quant; i++) {
+        produtosInseridos[i] = itens[i];
+    }
+    frete = calcular_frete(valorT);
+    valorTotal = valorT + frete;
 }
-void Vendas::setCodigoVenda() {
-    unsigned seed = time(0);
-    srand(seed);
-    // Criar verificação (depende da formatação do txt)
-    codigoVenda = rand() % 1000;
+int Vendas::criar_codigoVenda() {
+    static bool inicializado = false;
+    if (!inicializado) {
+        srand(time(nullptr));
+        inicializado = true;
+    }
+    int codigo;
+    do {
+        codigo = (rand() % 900) + 100;
+    } while (verificar_codigo(codigo));
+    return codigo;
+}
+
+bool Vendas::verificar_codigo(int codigo) {
+    ifstream arquivo("../data/vendas.txt");
+    string linha;
+    while (getline(arquivo, linha)) {
+        if (linha.find("Codigo: " + to_string(codigo)) != string::npos) {
+            return true;
+        }
+    }
+    return false;
 }
 Vendas Vendas::inicializar_com_codigo(int codigoV) {
     return Vendas();
@@ -36,8 +62,14 @@ Vendas Vendas::inicializar_com_codigo(int codigoV) {
 bool Vendas::verificar_estoque() {
     return true;
 }
-void Vendas::calcular_preco(int quant) {
-
+float Vendas::calcular_frete(float valorT) {
+    if (valorT<=100.00) {
+        return 30.00;
+    }
+    if (valorT>100.00 && valorT<=300.00) {
+        return 20.00;
+    }
+    return 0.00;
 }
 
 void Vendas::consultar_venda(int codigoV) {
@@ -113,7 +145,44 @@ void Vendas::alterar_itens_venda(int codigoV) {
 void Vendas::deletar_venda(int codigoV) {
     //Deletar venda, consultar no arquivo pelo codigo
 }
-void Vendas::inserir_venda_manualmente(int codigoV,int codigoVR, string nomeC, float valorT,ItemVenda *produtos) {
+void Vendas::inserir_venda_manualmente() {
+    int diferentesProdutos,codigoVR;
+    float valorT = 0.0f;
+    string nome;
+    int codigoV = criar_codigoVenda();
+    cout << "Quantos produtos diferentes foram comprados" << endl;
+    cin >> diferentesProdutos;
+    if (diferentesProdutos <= 0) {
+        cout << "Quantidade inválida!" << endl;
+        return;
+    }
+    ItemVenda* produtos = new ItemVenda[diferentesProdutos];
+    for (int i = 0; i < diferentesProdutos; i++) {
+        cout << "\nProduto " << i+1 << ":\n";
 
+        cout << "Código: ";
+        cin >> produtos[i].codigoProduto;
+
+        cout << "Nome: ";
+        cin.ignore();
+        getline(cin, produtos[i].nomeProduto);
+
+        cout << "Quantidade: ";
+        cin >> produtos[i].quantidadeVendida;
+
+        cout << "Preço Unitário: ";
+        cin >> produtos[i].precoUnitario;
+
+        produtos[i].precoTotal = produtos[i].quantidadeVendida * produtos[i].precoUnitario;
+        valorT += produtos[i].precoTotal;
+    }
+    cout<<"Insira o nome do comprador: "<<endl;
+    cin.ignore();
+    cin >> nome;
+    cout<<"Insira o codigo do vendedor: "<<endl;
+    cin >> codigoVR;
+
+    Vendas(codigoV,codigoVR,nome,valorT,produtos,diferentesProdutos);
+    delete[] produtos;
 }
 
