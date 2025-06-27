@@ -24,8 +24,4 @@ class Vendedores {
 
     }
 };
-int main() {
-    FILE *arqVendedores = fopen("vendedores.txt","w ");
-    fprintf(arqVendedores,"Opa tudo bom");
-    return 0;
-}
+

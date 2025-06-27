@@ -29,7 +29,7 @@ class Vendas {
         Vendas(int codigoP, int quant);
         void setCodigoVenda();
 
-        Vendas inicializar_com_codigo();
+        Vendas inicializar_com_codigo(int codigoV);
 
         void aicionar_item(int codigoItem, int quant);
 

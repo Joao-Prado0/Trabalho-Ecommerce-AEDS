@@ -9,7 +9,7 @@
 using namespace std;
 Vendas::Vendas(){}
 Vendas::Vendas(int codigoP, int quant) {
-    verificar_estoque(codigoP,quant);
+    verificar_estoque();
 }
 void Vendas::setCodigoVenda() {
     unsigned seed = time(0);
@@ -18,30 +18,30 @@ void Vendas::setCodigoVenda() {
     codigoVenda = rand() % 1000;
 }
 Vendas Vendas::inicializar_com_codigo(int codigoV) {
-
+    return Vendas();
 }
-void Vendas::aicionar_item(int codigoItem,int quant) {
-    Produtos item = Produtos::buscar_codigo_produto(codigoItem);
-    ItemVenda produtoSolicitado;
-    if (verificar_estoque(codigoItem,quant)) {
-        produtoSolicitado.quantidadeVendida = quant;
-        produtoSolicitado.precoTotal = item.preco * quant;
-        produtoSolicitado.codigoProduto = codigoItem;
-        produtoSolicitado.nomeProduto = item.nome;
-        produtoSolicitado.precoUnitario = item.preco;
-    } else {
-        cout << "O produto: "<<item.nome<<". Esta esgotado"<<endl;
-    }
-}
+// void Vendas::aicionar_item(int codigoItem,int quant) {
+//     Produtos item = Produtos::buscar_codigo_produto(codigoItem);
+//     ItemVenda produtoSolicitado;
+//     if (verificar_estoque(codigoItem,quant)) {
+//         produtoSolicitado.quantidadeVendida = quant;
+//         produtoSolicitado.precoTotal = item.preco * quant;
+//         produtoSolicitado.codigoProduto = codigoItem;
+//         produtoSolicitado.nomeProduto = item.nome;
+//         produtoSolicitado.precoUnitario = item.preco;
+//     } else {
+//         cout << "O produto: "<<item.nome<<". Esta esgotado"<<endl;
+//     }
+// }
 bool Vendas::verificar_estoque() {
-
+    return true;
 }
 void Vendas::calcular_preco(int quant) {
 
 }
 
 void Vendas::consultar_venda(int codigoV) {
-    ifstream arquivo("vendas.txt");
+    ifstream arquivo("../data/vendas.txt");
     string linha;
     bool encontrou = false;
     bool imprimir = false;
@@ -68,7 +68,7 @@ void Vendas::consultar_venda(int codigoV) {
     }
 
     if (!encontrou) {
-        cout << "Venda com código " << codigoV << " não encontrada." << endl;
+        cout << "Venda com codigo " << codigoV << " nao encontrada." << endl;
     }
     arquivo.close();
 }
@@ -116,6 +116,4 @@ void Vendas::deletar_venda(int codigoV) {
 void Vendas::inserir_venda_manualmente(int codigoV,int codigoVR, string nomeC, float valorT,ItemVenda *produtos) {
 
 }
-int main() {
-    return 0;
-}
+
