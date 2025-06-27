@@ -231,6 +231,7 @@ int main() {
             default:
                 cout << "Opcao invalida! Tente novamente." << endl;
 
-    } while(opcao != 0);
+        }
+    }while(opcao != 0);
     return 0;
 }
