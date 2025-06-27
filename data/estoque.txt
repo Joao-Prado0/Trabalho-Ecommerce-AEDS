@@ -5,4 +5,3 @@ Codigo    Nome do Produto                    Estoque    Preco (R$)
 1002      Notebook Dell Inspiron 15                5     4599.00
 1003      Fone Bluetooth JBL Tune 520             10      349.99
 1004      Smartwatch Amazfit GTS 4 Mini           10      799.90
-xas

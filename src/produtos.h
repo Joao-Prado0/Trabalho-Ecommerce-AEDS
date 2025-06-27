@@ -12,7 +12,7 @@ struct Produto {
     double precoVenda;
 };
 
-// Funções principais conforme especificação
+// Funções principais 
 int cadastrar_produto(std::vector<Produto>& lista_produtos, int& total_produtos, 
                      const std::string& nome, int codigo, int quantidade_estoque, double preco_venda);
 
