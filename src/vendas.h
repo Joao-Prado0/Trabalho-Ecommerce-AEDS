@@ -10,6 +10,8 @@ struct ItemVenda{
     int quantidadeVendida;
     float precoUnitario;
     float precoTotal;
+
+    ItemVenda(){};
 };
 
 class Vendas {
@@ -19,7 +21,7 @@ class Vendas {
         string nomeComprador;
         float valorTotal;
         float frete;
-        vector<ItemVenda> itens;
+        ItemVenda *itens = new ItemVenda;
 
     public:
         Vendas();
@@ -27,19 +29,23 @@ class Vendas {
         Vendas(int codigoP, int quant);
         void setCodigoVenda();
 
+        Vendas inicializar_com_codigo();
+
         void aicionar_item(int codigoItem, int quant);
 
-        void calcular_preco(int quant,Produtos produtoSolicitado);
+        void calcular_preco(int quant);
 
-        Vendas consultar_venda(int codigoV);
+        void consultar_venda(int codigoV);
 
         void alterar_venda(int codigoV);
 
+        void alterar_itens_venda(int codigoV);
+
         void deletar_venda(int codigoV);
 
-        void inserir_venda_manualmente(int codigoV,int codigoVR, string nomeC, float valorT,vector<ItemVenda> produtos);
+        void inserir_venda_manualmente(int codigoV,int codigoVR, string nomeC, float valorT,ItemVenda *produtos);
 
-        bool verificar_estoque(int codigo, int quant);
+        bool verificar_estoque();
 };
 
 #endif

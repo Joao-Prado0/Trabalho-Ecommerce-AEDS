@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 #include "produtos.h"
 #include "compradores.h"
 #include "vendas.h"
@@ -127,7 +126,7 @@ void submenu_vendas(Vendas venda) {
                 cout << "Quantos produtos diferentes foram comprados" << endl;
                 cin >> diferentesProdutos;
                 if (diferentesProdutos>1) {
-                    vector<ItemVenda> produtos(diferentesProdutos);
+                    auto *produtos = new ItemVenda[diferentesProdutos];
                     for (int i=0;i<diferentesProdutos;i++) {
                         cout<<"Insira o codigo do produto"<<endl;
                         cin >> produtos[i].codigoProduto;
@@ -139,7 +138,7 @@ void submenu_vendas(Vendas venda) {
                         cin >> produtos[i].precoUnitario;
                     }
                 } else if (diferentesProdutos==1) {
-                    vector<ItemVenda> produtos(1);
+                    auto *produtos = new ItemVenda[1];
                     cout<<"Insira o codigo do produto:"<<endl;
                     cin >> produtos[0].codigoProduto;
                     cout<<"Insira o nome do produto:"<<endl;
@@ -160,7 +159,7 @@ void submenu_vendas(Vendas venda) {
                 cin >> valorTotal;
                 venda.inserir_venda_manualmente(codigoVenda,codigoVendedor,nomeComprador,valorTotal,produtos);
             case 2:
-                cout << "Insira o codigo da venda" << endl;
+                cout << "Insira o codigo da venda (ou 0 para voltar)" << endl;
                 cin >> codigoVenda;
                 venda.consultar_venda(codigoVenda);
                 break;
@@ -181,7 +180,7 @@ void submenu_vendas(Vendas venda) {
         }
     } while(opcao != 0);
 }
-void submenu_realizar_venda() {
+void submenu_realizar_venda(Vendas venda) {
     int codigoProduto,codigoVendedor,cpfComprador,quantidadeProduto;
     bool usuario = false, vendedor = false;
     char notaFiscal;
@@ -262,14 +261,14 @@ int main() {
                 submenu_vendas(venda);
                 break;
             case 5:
-                submenu_realizar_venda();
+                submenu_realizar_venda(venda);
                 break;
             case 0:
                 cout << "Saindo..." << endl;
                 break;
             default:
                 cout << "Opcao invalida! Tente novamente." << endl;
-        }
+
     } while(opcao != 0);
     return 0;
 }
