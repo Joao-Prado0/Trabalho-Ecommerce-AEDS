@@ -1,5 +1,8 @@
 #include <iostream>
 #include "produtos.h"
+#include "compradores.h"
+#include "vendas.h"
+#include "vendedores.h"
 using namespace std;
 
 void submenu_produtos() {
@@ -101,22 +104,74 @@ void submenu_compradores() {
     } while(opcao != 0);
 }
 
-void submenu_vendas() {
-    int opcao;
+void submenu_vendas(Vendas venda) {
+    int opcao,codigoVenda;
     do {
         cout << "\n--- Gerenciar Vendas ---" << endl;
-        cout << "1. Realizar Venda" << endl;
+        cout << "1. Cadastrar Venda" << endl;
         cout << "2. Consultar Venda" << endl;
+        cout << "3. Alterar Venda" << endl;
+        cout << "4. Excluir Venda" << endl;
         cout << "0. Voltar" << endl;
         cout << "Escolha uma opcao: ";
         cin >> opcao;
         cin.ignore();
         switch(opcao) {
             case 1:
-                cout << "Realizar Venda (implementar)" << endl;
-                break;
+                int diferentesProdutos,codigoVendedor;
+                float valorTotal;
+                string nomeComprador;
+                cout << "Insira o codigo da venda" << endl;
+                cin >> codigoVenda;
+                cout << "Quantos produtos diferentes foram comprados" << endl;
+                cin >> diferentesProdutos;
+                if (diferentesProdutos>1) {
+                    auto *produtos = new ItemVenda[diferentesProdutos];
+                    for (int i=0;i<diferentesProdutos;i++) {
+                        cout<<"Insira o codigo do produto"<<endl;
+                        cin >> produtos[i].codigoProduto;
+                        cout<<"Insira o nome do produto"<<endl;
+                        cin >> produtos[i].nomeProduto;
+                        cout<<"Insira a quantidade vendida do produto"<<endl;
+                        cin >> produtos[i].quantidadeVendida;
+                        cout<<"Insira o preco unitario do produto"<<endl;
+                        cin >> produtos[i].precoUnitario;
+                    }
+                } else if (diferentesProdutos==1) {
+                    auto *produtos = new ItemVenda[1];
+                    cout<<"Insira o codigo do produto:"<<endl;
+                    cin >> produtos[0].codigoProduto;
+                    cout<<"Insira o nome do produto:"<<endl;
+                    cin >> produtos[0].nomeProduto;
+                    cout<<"Insira a quantidade vendida do produto:"<<endl;
+                    cin >> produtos[0].quantidadeVendida;
+                    cout<<"Insira o preco unitario do produto:"<<endl;
+                    cin >> produtos[0].precoUnitario;
+                } else {
+                    cout << "Numero invalido." << endl;
+                    break;
+                }
+                cout<<"Insira o nome do comprador: "<<endl;
+                cin >> nomeComprador;
+                cout<<"Insira o codigo do vendedor: "<<endl;
+                cin >> codigoVendedor;
+                cout<<"Insira o valor total da compra: "<<endl;
+                cin >> valorTotal;
+                venda.inserir_venda_manualmente(codigoVenda,codigoVendedor,nomeComprador,valorTotal,produtos);
             case 2:
-                cout << "Consultar Venda (implementar)" << endl;
+                cout << "Insira o codigo da venda (ou 0 para voltar)" << endl;
+                cin >> codigoVenda;
+                venda.consultar_venda(codigoVenda);
+                break;
+            case 3:
+                cout << "Insira o codigo da venda" << endl;
+                cin >> codigoVenda;
+                venda.alterar_venda(codigoVenda);
+                break;
+            case 4:
+                cout << "Insira o codigo da venda" << endl;
+                cin >> codigoVenda;
+                venda.deletar_venda(codigoVenda);
                 break;
             case 0:
                 break;
@@ -125,9 +180,10 @@ void submenu_vendas() {
         }
     } while(opcao != 0);
 }
-void submenu_realizar_venda() {
+void submenu_realizar_venda(Vendas venda) {
     int codigoProduto,codigoVendedor,cpfComprador,quantidadeProduto;
     bool usuario = false, vendedor = false;
+    char notaFiscal;
     do {
         cout << "Informe seu CPF:" << endl;
         cin >> cpfComprador;
@@ -135,8 +191,9 @@ void submenu_realizar_venda() {
             usuario = true;
             //chamar função da classe vendas
         } else {
-            cout << "Insira um cpf valido" << endl;
+            cout << "Insira um cpf valido e cadastrado." << endl;
         }
+        system("cls");
     } while (!usuario);
     do {
         //imprimir todos os produtos disponíveis
@@ -145,7 +202,7 @@ void submenu_realizar_venda() {
         if (validar_produto(codigoProduto)) {
             cout <<"Insira quantas unidades desejadas:"<<endl;
             cin >> quantidadeProduto;
-            // inicializar objeto na classe vendas
+            // inicializar vetor de itens na classe vendas
         } else {
             cout << "Insira um codigo valido" << endl;
         }
@@ -153,10 +210,28 @@ void submenu_realizar_venda() {
     } while (codigoProduto!=0);
     do {
         // imprimir todos os vendedores (direto pelo arquivo)
-        cout << "Insira o codigo do vendedor que te atendeu"
-    } while (!vendedor)
+        cout << "Insira o codigo do vendedor que te atendeu" << endl;
+        cin >> codigoVendedor;
+        if (validar_vendedor(codigoVendedor)) {
+            vendedor = true;
+        } else {
+            cout << "Insira um codigo valido" << endl;
+        }
+    } while (!vendedor);
+
+    // função inicializar objeto venda com todos os parametros gerados
+
+    cout<<"Deseja gerar nota fiscal? (digite s (sim) ou n (nao))"<<endl;
+    cin >> notaFiscal;
+    if (notaFiscal=='s' || notaFiscal=='S') {
+        // gerar arquivo de nota fiscal
+        cout << "Obrigado pela compra!" << endl;
+    } else if (notaFiscal=='n' || notaFiscal=='N') {
+        cout << "Obrigado pela compra!" << endl;
+    }
 }
 int main() {
+    Vendas venda;
     // Carregar dados dos produtos ao iniciar o programa
     carregarProdutos();
     
@@ -183,17 +258,17 @@ int main() {
                 submenu_compradores();
                 break;
             case 4:
-                submenu_vendas();
+                submenu_vendas(venda);
                 break;
             case 5:
-                submenu_realizar_venda();
+                submenu_realizar_venda(venda);
                 break;
             case 0:
                 cout << "Saindo..." << endl;
                 break;
             default:
                 cout << "Opcao invalida! Tente novamente." << endl;
-        }
+
     } while(opcao != 0);
     return 0;
 }

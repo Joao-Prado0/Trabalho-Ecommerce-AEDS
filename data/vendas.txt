@@ -1,9 +1,9 @@
 Venda:
 Codigo: 101
-Comprador: João Prado
+Comprador: Joao Prado
 Itens:
- - Codigo: 10 | Nome: Teclado | Qtd: 2 | Unitário: 100.00 | Total: 200.00
- - Codigo: 12 | Nome: Mouse   | Qtd: 1 | Unitário: 80.00  | Total: 80.00
+ - Codigo: 10 | Nome: Teclado | Qtd: 2 | Unitario: 100.00 | Total: 200.00
+ - Codigo: 12 | Nome: Mouse   | Qtd: 1 | Unitario: 80.00  | Total: 80.00
 Frete: 20.00
 Valor Total: 300.00
 ---
