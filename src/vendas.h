@@ -26,6 +26,8 @@ class Vendas {
     public:
         Vendas();
 
+        void imprimir_no_documento(int codigoV, int codigoVR, string nome, float valorT, ItemVenda *itens, int quant);
+
         Vendas(int codigoP);
 
         int criar_codigoVenda();

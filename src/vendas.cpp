@@ -5,21 +5,11 @@
 #include <iostream>
 #include <fstream>
 #include <ctime>
-#include <cstdlib>  // Para rand() e srand()
-#include <utility>
+#include <iomanip>
+#include <cmath>
 using namespace std;
 Vendas::Vendas(){}
-Vendas::Vendas(int codigoV,int codigoVR, string nome, float valorT, ItemVenda *itens, int quant) {
-    codigoVenda = codigoV;
-    codigoVendedor = codigoVR;
-    nomeComprador = std::move(nome);
-    auto *produtosInseridos = new ItemVenda[quant];
-    for (int i=0; i<quant; i++) {
-        produtosInseridos[i] = itens[i];
-    }
-    frete = calcular_frete(valorT);
-    valorTotal = valorT + frete;
-}
+
 int Vendas::criar_codigoVenda() {
     static bool inicializado = false;
     if (!inicializado) {
@@ -71,7 +61,6 @@ float Vendas::calcular_frete(float valorT) {
     }
     return 0.00;
 }
-
 void Vendas::consultar_venda(int codigoV) {
     ifstream arquivo("../data/vendas.txt");
     string linha;
@@ -80,6 +69,7 @@ void Vendas::consultar_venda(int codigoV) {
 
     if (!arquivo.is_open()) {
         cout << "Erro ao abrir o arquivo" << endl;
+        return;
     }
 
     while (getline(arquivo,linha)) {
@@ -105,42 +95,193 @@ void Vendas::consultar_venda(int codigoV) {
     arquivo.close();
 }
 void Vendas::alterar_venda(int codigoV) {
-    Vendas alterarVenda = inicializar_com_codigo(codigoV);
+    ifstream arquivoEntrada("../data/vendas.txt");
+    if (!arquivoEntrada.is_open()) {
+        cout << "Erro ao abrir o arquivo" << endl;
+        return;
+    }
+    vector<string> linhas;
+    string linha;
+    while (getline(arquivoEntrada, linha)) {
+        linhas.push_back(linha);
+    }
+    arquivoEntrada.close();
+
+    bool encontrou = false;
+    int inicio = -1, fim = -1;
+
+    for (size_t i = 0; i < linhas.size(); ++i) {
+        if (linhas[i] == "Codigo: " + to_string(codigoV)) {
+            encontrou = true;
+            inicio = i;
+        }
+        if (encontrou && linhas[i] == "---") {
+            fim = i;
+            break;
+        }
+    }
+    if (!encontrou) {
+        cout << "Venda com codigo " << codigoV << " nao encontrada." << endl;
+        return;
+    }
     int opcao;
     do {
-        cout << "Insira Opcao Desejada: " << endl;
-        cout << "1. Alterar codigo da venda:" << endl;
-        cout << "2. ALterar codigo do vendedor:" << endl;
-        cout << "3. Alterar nome do comprador:" << endl;
-        cout << "4. Alterar valor total da compra:" << endl;
-        cout << "5. ALterar valor final:" << endl;
-        cout << "6. Alterar itens da venda:" << endl;
-        cout << "0. Sair" << endl;
+        cout << "O que deseja alterar?"<<endl;
+        cout << "1. Codigo da venda."<<endl;
+        cout << "2. Nome do comprador." << endl;
+        cout << "3. Valor total." << endl;
+        cout << "4. Frete."<<endl;
+        cout << "5. Itens da venda."<<endl;
+        cout << "0. Sair e salvar."<<endl;
         cin >> opcao;
         cin.ignore();
-    }while (opcao!=0);
-    switch (opcao) {
-        case 1:
-            cout<<"Insira o novo codigo de venda: "<<endl;
-            cin >> alterarVenda.codigoVenda;
-        case 2:
-            cout<<"Insira o novo codigo de vendedor: "<<endl;
-            cin >> alterarVenda.codigoVendedor;
-        case 3:
-            cout<<"Insira o novo nome do comprador: "<<endl;
-            cin >> alterarVenda.nomeComprador;
-        case 4:
-            cout<<"Insira o novo valor da venda: "<<endl;
-            cin >> alterarVenda.valorTotal;
-        case 5:
-            cout<<"Insira o novo valor do frete: "<<endl;
-            cin >> alterarVenda.frete;
-        case 6:
-            alterar_itens_venda(codigoV);
+        switch (opcao) {
+            case 1: {
+                int novoCodigo;
+                cout << "Novo codigo: ";
+                cin >> novoCodigo;
+                linhas[inicio] = "Codigo: " + to_string(novoCodigo);
+                break;
+            }
+            case 2: {
+                string novoNome;
+                cout << "Novo nome do comprador: ";
+                getline(cin, novoNome);
+                linhas[inicio + 1] = "Comprador: " + novoNome;
+                break;
+            }
+            case 3: {
+                float novoTotal;
+                cout << "Novo valor total: ";
+                cin >> novoTotal;
+                linhas[fim - 1] = "Valor Total: " + to_string(novoTotal);
+                break;
+            }
+            case 4: {
+                float novoFrete;
+                cout << "Novo valor do frete: ";
+                cin >> novoFrete;
+                linhas[fim - 2] = "Frete: " + to_string(novoFrete);
+                break;
+            }
+            case 5:
+                alterar_itens_venda(codigoV);
+                break;
+            case 0:
+                cout << "Saindo da edição." << endl;
+                break;
+            default:
+                cout << "Opção inválida!" << endl;
+        }
+    } while (opcao != 0);
+
+    ofstream arquivoSaida("../data/vendas.txt");
+    if (!arquivoSaida.is_open()) {
+        cout << "Erro ao regravar o arquivo." << endl;
+        return;
     }
+    for (size_t i = 0; i < linhas.size(); ++i) {
+        arquivoSaida << linhas[i] << endl;
+    }
+    arquivoSaida.close();
+    cout << "Venda atualizada com sucesso!" << endl;
 }
 void Vendas::alterar_itens_venda(int codigoV) {
+    ifstream arquivoEntrada("../data/vendas.txt");
+    if (!arquivoEntrada.is_open()) {
+        cout << "Erro ao abrir o arquivo" << endl;
+        return;
+    }
+    vector<string> linhas;
+    string linha;
+    while (getline(arquivoEntrada, linha)) {
+        linhas.push_back(linha);
+    }
+    arquivoEntrada.close();
+    int inicio = -1, fim = -1;
+    for (size_t i = 0; i < linhas.size(); ++i) {
+        if (linhas[i] == "Codigo: " + to_string(codigoV)) {
+            inicio = i;
+        }
+        if (inicio != -1 && linhas[i] == "---") {
+            fim = i;
+            break;
+        }
+    }
+    if (inicio == -1 || fim == -1) {
+        cout << "Venda não encontrada." << endl;
+        return;
+    }
 
+    int idxItens = -1;
+    for (int i = inicio; i < fim; ++i) {
+        if (linhas[i] == "Itens:") {
+            idxItens = i;
+            break;
+        }
+    }
+    if (idxItens == -1) {
+        cout << "Erro: seção de itens não encontrada." << endl;
+        return;
+    }
+
+    int idxFrete = -1;
+    for (int i = idxItens + 1; i < fim; ++i) {
+        if (linhas[i].find("Frete:") != string::npos) {
+            idxFrete = i;
+            break;
+        }
+    }
+    if (idxFrete == -1) {
+        cout << "Erro: linha de frete não encontrada." << endl;
+        return;
+    }
+
+    linhas.erase(linhas.begin() + idxItens + 1, linhas.begin() + idxFrete);
+
+    int n;
+    cout << "Quantos produtos deseja inserir? ";
+    cin >> n;
+    vector<string> novosItens;
+    float novoTotal = 0.0f;
+
+    for (int i = 0; i < n; ++i) {
+        int cod, qtd;
+        float preco;
+        string nome;
+
+        cout << "Produto " << (i+1) << endl;
+        cout << "Código: "; cin >> cod;
+        cout << "Nome: "; cin.ignore(); getline(cin, nome);
+        cout << "Quantidade: "; cin >> qtd;
+        cout << "Preço unitário: "; cin >> preco;
+
+        preco = round(preco * 100) / 100;
+        float total = round((preco * qtd) * 100) / 100;
+        novoTotal += total;
+
+        string itemLinha = " - Codigo: " + to_string(cod)
+        + " | Nome: " + nome
+        + " | Qtd: " + to_string(qtd)
+        + " | Unitario: " + to_string(preco)
+        + " | Total: " + to_string(total);
+        novosItens.push_back(itemLinha);
+    }
+    linhas.insert(linhas.begin() + idxFrete, novosItens.begin(), novosItens.end());
+    float novoFrete = calcular_frete(novoTotal);
+    linhas[idxFrete] = "Frete: " + to_string(novoFrete);
+    linhas[idxFrete + 1] = "Valor Total: " + to_string(novoTotal + novoFrete);
+
+    ofstream arquivoaSaida("../data/vendas.txt");
+    if (!arquivoaSaida.is_open()) {
+        cout << "Erro ao reescrever o arquivo" << endl;
+        return;
+    }
+    for (size_t i = 0; i < linhas.size(); ++i) {
+        arquivoaSaida << linhas[i] << endl;
+    }
+    arquivoaSaida.close();
+    cout << "Itens alterados com sucesso!" << endl;
 }
 void Vendas::deletar_venda(int codigoV) {
     //Deletar venda, consultar no arquivo pelo codigo
@@ -150,7 +291,7 @@ void Vendas::inserir_venda_manualmente() {
     float valorT = 0.0f;
     string nome;
     int codigoV = criar_codigoVenda();
-    cout << "Quantos produtos diferentes foram comprados" << endl;
+    cout << "Insira o numero de produtos comprados: " << endl;
     cin >> diferentesProdutos;
     if (diferentesProdutos <= 0) {
         cout << "Quantidade inválida!" << endl;
@@ -182,7 +323,30 @@ void Vendas::inserir_venda_manualmente() {
     cout<<"Insira o codigo do vendedor: "<<endl;
     cin >> codigoVR;
 
-    Vendas(codigoV,codigoVR,nome,valorT,produtos,diferentesProdutos);
+    imprimir_no_documento(codigoV,codigoVR,nome,valorT,produtos,diferentesProdutos);
     delete[] produtos;
 }
-
+void Vendas::imprimir_no_documento(int codigoV,int codigoVR, string nome, float valorT, ItemVenda *itens, int quant) {
+    ofstream arquivo("../data/vendas.txt", ios::app);
+    if (!arquivo.is_open()) {
+        cerr<<"Erro ao abrir o arquivo" << endl;
+        return;
+    }
+    arquivo << "Venda:\n";
+    arquivo << "Codigo: " << codigoV << "\n";
+    arquivo << "Comprador: " << nome << "\n";
+    arquivo << "Itens:\n";
+    for (int i = 0;i<quant; i++) {
+        arquivo << " - Codigo: " << itens[i].codigoProduto
+               << " | Nome: " << itens[i].nomeProduto
+               << " | Qtd: " << itens[i].quantidadeVendida
+               << " | Unitário: " << fixed << setprecision(2) << itens[i].precoUnitario
+               << " | Total: " << itens[i].precoTotal << "\n";
+    }
+    arquivo << "Frete: " << calcular_frete(valorT)<<"\n";
+    arquivo << "Valor Total: " << valorT+calcular_frete(valorT)<<"\n";
+    arquivo << "---\n";
+    // talvez colocar função que seta a comissão do vendedor automaticamente.
+    arquivo.close();
+    cout << "Venda registrada com sucesso! Codigo gerado: "<< codigoV<< endl;
+}
