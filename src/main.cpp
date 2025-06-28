@@ -5,7 +5,7 @@
 #include "vendedores.h"
 using namespace std;
 
-void submenu_produtos() {
+void submenu_produtos(Produtos& produtos) {
     int opcao;
     do {
         cout << "\n--- Gerenciar Produtos ---" << endl;
@@ -19,16 +19,16 @@ void submenu_produtos() {
         cin.ignore();
         switch(opcao) {
             case 1:
-                cadastrarProduto();
+                produtos.inserir_produto_manualmente();
                 break;
             case 2:
-                consultarProduto();
+                produtos.consultar_produto_interface();
                 break;
             case 3:
-                alterarProduto();
+                produtos.alterar_produto_interface();
                 break;
             case 4:
-                excluirProduto();
+                produtos.excluir_produto_interface();
                 break;
             case 0:
                 break;
@@ -149,24 +149,29 @@ void submenu_realizar_venda(Vendas venda) {
     do {
         cout << "Informe seu CPF:" << endl;
         cin >> cpfComprador;
-        if (validar_cpf(cpfComprador)) {
-            usuario = true;
-            //chamar função da classe vendas
-        } else {
-            cout << "Insira um cpf valido e cadastrado." << endl;
-        }
+        // if (validar_cpf(cpfComprador)) {
+        //     usuario = true;
+        //     //chamar função da classe vendas
+        // } else {
+        //     cout << "Insira um cpf valido e cadastrado." << endl;
+        // }
+        usuario = true; // Temporário para teste
         system("cls");
     } while (!usuario);
     do {
         //imprimir todos os produtos disponíveis
         cout <<"Insira codigo do produto desejado (caso deseje finalizar a compra insira 0):"<<endl;
         cin >> codigoProduto;
-        if (validar_produto(codigoProduto)) {
+        // if (validar_produto(codigoProduto)) {
+        //     cout <<"Insira quantas unidades desejadas:"<<endl;
+        //     cin >> quantidadeProduto;
+        //     // inicializar vetor de itens na classe vendas
+        // } else {
+        //     cout << "Insira um codigo valido" << endl;
+        // }
+        if (codigoProduto != 0) {
             cout <<"Insira quantas unidades desejadas:"<<endl;
             cin >> quantidadeProduto;
-            // inicializar vetor de itens na classe vendas
-        } else {
-            cout << "Insira um codigo valido" << endl;
         }
         system("cls");
     } while (codigoProduto!=0);
@@ -174,11 +179,12 @@ void submenu_realizar_venda(Vendas venda) {
         // imprimir todos os vendedores (direto pelo arquivo)
         cout << "Insira o codigo do vendedor que te atendeu" << endl;
         cin >> codigoVendedor;
-        if (validar_vendedor(codigoVendedor)) {
-            vendedor = true;
-        } else {
-            cout << "Insira um codigo valido" << endl;
-        }
+        // if (validar_vendedor(codigoVendedor)) {
+        //     vendedor = true;
+        // } else {
+        //     cout << "Insira um codigo valido" << endl;
+        // }
+        vendedor = true; // Temporário para teste
     } while (!vendedor);
 
     // função inicializar objeto venda com todos os parametros gerados
@@ -193,9 +199,9 @@ void submenu_realizar_venda(Vendas venda) {
     }
 }
 int main() {
+    cout << "=== PROGRAMA INICIADO - VERSAO ATUALIZADA ===" << endl;
     Vendas venda;
-    // Carregar dados dos produtos ao iniciar o programa
-    carregarProdutos();
+    Produtos produtos;
     
     int opcao;
     do {
@@ -211,7 +217,7 @@ int main() {
         cin.ignore();
         switch(opcao) {
             case 1:
-                submenu_produtos();
+                submenu_produtos(produtos);
                 break;
             case 2:
                 submenu_vendedores();

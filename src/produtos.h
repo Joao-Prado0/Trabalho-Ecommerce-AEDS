@@ -1,44 +1,38 @@
 #ifndef PRODUTOS_H
 #define PRODUTOS_H
-
 #include <string>
 #include <vector>
-#include <fstream>
+using namespace std;
 
 struct Produto {
-    std::string nome;
     int codigo;
+    std::string nome;
     int quantidadeEstoque;
-    double precoVenda;
+    float precoVenda;
+    Produto() = default;
 };
 
-// Funções principais 
-int cadastrar_produto(std::vector<Produto>& lista_produtos, int& total_produtos, 
-                     const std::string& nome, int codigo, int quantidade_estoque, double preco_venda);
-
-Produto* consultar_produto(const std::vector<Produto>& lista_produtos, int total_produtos, int codigo);
-
-int alterar_produto(std::vector<Produto>& lista_produtos, int total_produtos, int codigo,
-                   const std::string* novo_nome, int nova_quantidade, double novo_preco);
-
-int excluir_produto(std::vector<Produto>& lista_produtos, int& total_produtos, int codigo);
-
-// Funções auxiliares
-bool produtoExiste(const std::vector<Produto>& lista_produtos, int total_produtos, int codigo);
-int gerarCodigoAutomatico();
-void salvarProdutos();
-void carregarProdutos();
-void exibirProduto(const Produto& produto);
-void listarProdutos();
-
-// Funções de interface para o menu
-void cadastrarProduto();
-void consultarProduto();
-void alterarProduto();
-void excluirProduto();
-
-// Variáveis globais
-extern std::vector<Produto> produtos;
-extern int proximoCodigo;
+class Produtos {
+private:
+    vector<Produto> lista_produtos;
+    int proximoCodigo;
+    void atualizarProximoCodigo();
+public:
+    Produtos();
+    int gerarCodigoAutomatico();
+    bool inserir_produto(const string& nome, int codigo, int quantidade, float preco);
+    Produto* consultar_produto(int codigo);
+    bool alterar_produto(int codigo, const string* novo_nome, int nova_quantidade, float novo_preco);
+    bool excluir_produto(int codigo);
+    void listar_produtos();
+    void salvar_produtos();
+    void carregar_produtos();
+    
+    // Métodos de interface para o main.cpp
+    void inserir_produto_manualmente();
+    void consultar_produto_interface();
+    void alterar_produto_interface();
+    void excluir_produto_interface();
+};
 
 #endif 
