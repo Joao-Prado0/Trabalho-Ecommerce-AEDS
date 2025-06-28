@@ -7,7 +7,6 @@
 using namespace std;
 
 Produtos::Produtos() : proximoCodigo(1001) {
-    cout << "CONSTRUTOR Produtos chamado!" << endl;
     carregar_produtos();
 }
 
@@ -101,63 +100,48 @@ void Produtos::salvar_produtos() {
 
 void Produtos::carregar_produtos() {
     lista_produtos.clear();
-    cout << "Tentando abrir arquivo: data/estoque.txt" << endl;
     ifstream arquivo("data/estoque.txt");
     if (!arquivo.is_open()) {
         cout << "ERRO: Nao foi possivel abrir o arquivo data/estoque.txt" << endl;
         return;
     }
-    cout << "Arquivo aberto com sucesso!" << endl;
     
     string linha;
     Produto produto_atual;
     bool lendo_produto = false;
-    int contador = 0;
     
     while (getline(arquivo, linha)) {
-        cout << "Lendo linha: '" << linha << "'" << endl;
         if (linha.find("Produto:") != string::npos) {
             if (lendo_produto) {
                 lista_produtos.push_back(produto_atual);
-                cout << "Produto adicionado: " << produto_atual.codigo << " - " << produto_atual.nome << endl;
             }
             produto_atual = Produto();
             lendo_produto = true;
-            cout << "Iniciando novo produto" << endl;
         }
         else if (linha.find("Codigo: ") != string::npos) {
             produto_atual.codigo = stoi(linha.substr(8));
-            cout << "Codigo lido: " << produto_atual.codigo << endl;
         }
         else if (linha.find("Nome: ") != string::npos) {
             produto_atual.nome = linha.substr(6);
-            cout << "Nome lido: " << produto_atual.nome << endl;
         }
         else if (linha.find("Estoque: ") != string::npos) {
             produto_atual.quantidadeEstoque = stoi(linha.substr(9));
-            cout << "Estoque lido: " << produto_atual.quantidadeEstoque << endl;
         }
         else if (linha.find("Preco: ") != string::npos) {
             produto_atual.precoVenda = stof(linha.substr(7));
-            cout << "Preco lido: " << produto_atual.precoVenda << endl;
         }
         else if (linha.find("---") != string::npos) {
             if (lendo_produto) {
                 lista_produtos.push_back(produto_atual);
-                cout << "Produto finalizado: " << produto_atual.codigo << " - " << produto_atual.nome << endl;
                 lendo_produto = false;
-                contador++;
             }
         }
     }
     
     if (lendo_produto) {
         lista_produtos.push_back(produto_atual);
-        cout << "Ultimo produto adicionado: " << produto_atual.codigo << " - " << produto_atual.nome << endl;
-        contador++;
     }
     
-    cout << "Total de produtos carregados: " << lista_produtos.size() << " (contador: " << contador << ")" << endl;
     atualizarProximoCodigo();
     arquivo.close();
 }
