@@ -284,46 +284,140 @@ void Vendas::alterar_itens_venda(int codigoV) {
     cout << "Itens alterados com sucesso!" << endl;
 }
 void Vendas::deletar_venda(int codigoV) {
-    //Deletar venda, consultar no arquivo pelo codigo
+    ifstream entrada("../data/vendas.txt");
+    if (!entrada.is_open()) {
+        cout << "Erro ao abrir o arquivo" << endl;
+        return;
+    }
+
+    vector<string> linhas;
+    string linha;
+    while (getline(entrada, linha)) {
+        linhas.push_back(linha);
+    }
+    entrada.close();
+
+    int inicio = -1, fim = -1;
+    for (size_t i = 0; i < linhas.size(); ++i) {
+        if (linhas[i] == "Codigo: " + to_string(codigoV)) {
+            // "Venda:" está sempre uma linha antes
+            if (i > 0 && linhas[i - 1] == "Venda:") {
+                inicio = i - 1;
+            } else {
+                inicio = i;
+            }
+        }
+        if (inicio != -1 && linhas[i] == "---") {
+            fim = i;
+            break;
+        }
+    }
+    if (inicio == -1 || fim == -1) {
+        cout << "Venda com código " << codigoV << " não encontrada." << endl;
+        return;
+    }
+
+    linhas.erase(linhas.begin() + inicio, linhas.begin() + fim + 1);
+
+    ofstream arquivosSaida("../data/vendas.txt");
+    if (!arquivosSaida.is_open()) {
+        cout << "Erro ao reescrever o arquivo" << endl;
+        return;
+    }
+    for (const string& l : linhas) {
+        arquivosSaida << l << endl;
+    }
+    arquivosSaida.close();
+    cout << "Venda removida com sucesso!" << endl;
 }
 void Vendas::inserir_venda_manualmente() {
-    int diferentesProdutos,codigoVR;
+    int diferentesProdutos, codigoVR;
     float valorT = 0.0f;
     string nome;
     int codigoV = criar_codigoVenda();
-    cout << "Insira o numero de produtos comprados: " << endl;
-    cin >> diferentesProdutos;
-    if (diferentesProdutos <= 0) {
-        cout << "Quantidade inválida!" << endl;
-        return;
+    cin.clear();
+    while (true) {
+        cout << "Insira o numero de produtos comprados: " << endl;
+        if (cin >> diferentesProdutos) {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            if (diferentesProdutos > 0) {
+                break;
+            }
+            cout << "Quantidade deve ser maior que zero!" << endl;
+        } else {
+            cout << "Entrada invalida! Digite um numero valido." << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
     }
+
     ItemVenda* produtos = new ItemVenda[diferentesProdutos];
+
     for (int i = 0; i < diferentesProdutos; i++) {
         cout << "\nProduto " << i+1 << ":\n";
-
-        cout << "Código: ";
-        cin >> produtos[i].codigoProduto;
-
+        while (true) {
+            cout << "Codigo: ";
+            if (cin >> produtos[i].codigoProduto) {
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                break;
+            }
+            cout << "Codigo invalido! Digite um numero." << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
         cout << "Nome: ";
-        cin.ignore();
         getline(cin, produtos[i].nomeProduto);
 
-        cout << "Quantidade: ";
-        cin >> produtos[i].quantidadeVendida;
+        while (true) {
+            cout << "Quantidade: ";
+            if (cin >> produtos[i].quantidadeVendida) {
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                if (produtos[i].quantidadeVendida > 0) {
+                    break;
+                }
+                cout << "Quantidade deve ser maior que zero!" << endl;
+            } else {
+                cout << "Quantidade invalida! Digite um numero." << endl;
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            }
+        }
 
-        cout << "Preço Unitário: ";
-        cin >> produtos[i].precoUnitario;
+        while (true) {
+            cout << "Preco Unitario: ";
+            if (cin >> produtos[i].precoUnitario) {
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                if (produtos[i].precoUnitario > 0) {
+                    break;
+                }
+                cout << "Preco deve ser maior que zero!" << endl;
+            } else {
+                cout << "Preco invalido! Digite um numero." << endl;
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            }
+        }
 
         produtos[i].precoTotal = produtos[i].quantidadeVendida * produtos[i].precoUnitario;
         valorT += produtos[i].precoTotal;
     }
-    cout<<"Insira o nome do comprador: "<<endl;
-    cin.ignore();
-    cin >> nome;
-    cout<<"Insira o codigo do vendedor: "<<endl;
-    cin >> codigoVR;
 
-    imprimir_no_documento(codigoV,codigoVR,nome,valorT,produtos,diferentesProdutos);
+    cout << "Insira o nome do comprador: " << endl;
+    getline(cin, nome);
+
+    while (true) {
+        cout << "Insira o codigo do vendedor: " << endl;
+        if (cin >> codigoVR) {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            break;
+        } else {
+            cout << "Codigo invalido! Digite um numero." << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+    }
+
+    imprimir_no_documento(codigoV, codigoVR, nome, valorT, produtos, diferentesProdutos);
     delete[] produtos;
 }
 void Vendas::imprimir_no_documento(int codigoV,int codigoVR, string nome, float valorT, ItemVenda *itens, int quant) {
@@ -340,7 +434,7 @@ void Vendas::imprimir_no_documento(int codigoV,int codigoVR, string nome, float 
         arquivo << " - Codigo: " << itens[i].codigoProduto
                << " | Nome: " << itens[i].nomeProduto
                << " | Qtd: " << itens[i].quantidadeVendida
-               << " | Unitário: " << fixed << setprecision(2) << itens[i].precoUnitario
+               << " | Unitario: " << fixed << setprecision(2) << itens[i].precoUnitario
                << " | Total: " << itens[i].precoTotal << "\n";
     }
     arquivo << "Frete: " << calcular_frete(valorT)<<"\n";

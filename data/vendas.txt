@@ -1,17 +1,26 @@
 Venda:
-Codigo: 101
-Comprador: Joao Prado
-Itens:
- - Codigo: 10 | Nome: Teclado | Qtd: 2 | Unitario: 100.00 | Total: 200.00
- - Codigo: 12 | Nome: Mouse   | Qtd: 1 | Unitario: 80.00  | Total: 80.00
-Frete: 20.00
-Valor Total: 300.00
----
-Venda:
 Codigo: 102
 Comprador: Maria Silva
 Itens:
  - Codigo: 11 | Nome: Monitor | Qtd: 1 | Unitário: 900.00 | Total: 900.00
 Frete: 0.00
 Valor Total: 900.00
+---
+Venda:
+Codigo: 339
+Comprador: Joao
+Itens:
+ - Codigo: 112 | Nome: Geladeira | Qtd: 3 | Unitário: 700.00 | Total: 2100.00
+ - Codigo: 314 | Nome: Liquidificador | Qtd: 2 | Unitário: 120.00 | Total: 240.00
+Frete: 0.00
+Valor Total: 2340.00
+---
+Venda:
+Codigo: 985
+Comprador: Thais Nunes
+Itens:
+ - Codigo: 142 | Nome: TV | Qtd: 1 | Unitário: 1500.45 | Total: 1500.45
+ - Codigo: 112 | Nome: Controle | Qtd: 2 | Unitário: 124.50 | Total: 249.00
+Frete: 0.00
+Valor Total: 1749.45
 ---

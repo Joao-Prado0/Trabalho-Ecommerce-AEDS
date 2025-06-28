@@ -142,56 +142,56 @@ void submenu_vendas(Vendas venda) {
         }
     } while(opcao != 0);
 }
-void submenu_realizar_venda(Vendas venda) {
-    int codigoProduto,codigoVendedor,cpfComprador,quantidadeProduto;
-    bool usuario = false, vendedor = false;
-    char notaFiscal;
-    do {
-        cout << "Informe seu CPF:" << endl;
-        cin >> cpfComprador;
-        if (validar_cpf(cpfComprador)) {
-            usuario = true;
-            //chamar função da classe vendas
-        } else {
-            cout << "Insira um cpf valido e cadastrado." << endl;
-        }
-        system("cls");
-    } while (!usuario);
-    do {
-        //imprimir todos os produtos disponíveis
-        cout <<"Insira codigo do produto desejado (caso deseje finalizar a compra insira 0):"<<endl;
-        cin >> codigoProduto;
-        if (validar_produto(codigoProduto)) {
-            cout <<"Insira quantas unidades desejadas:"<<endl;
-            cin >> quantidadeProduto;
-            // inicializar vetor de itens na classe vendas
-        } else {
-            cout << "Insira um codigo valido" << endl;
-        }
-        system("cls");
-    } while (codigoProduto!=0);
-    do {
-        // imprimir todos os vendedores (direto pelo arquivo)
-        cout << "Insira o codigo do vendedor que te atendeu" << endl;
-        cin >> codigoVendedor;
-        if (validar_vendedor(codigoVendedor)) {
-            vendedor = true;
-        } else {
-            cout << "Insira um codigo valido" << endl;
-        }
-    } while (!vendedor);
-
-    // função inicializar objeto venda com todos os parametros gerados
-
-    cout<<"Deseja gerar nota fiscal? (digite s (sim) ou n (nao))"<<endl;
-    cin >> notaFiscal;
-    if (notaFiscal=='s' || notaFiscal=='S') {
-        // gerar arquivo de nota fiscal
-        cout << "Obrigado pela compra!" << endl;
-    } else if (notaFiscal=='n' || notaFiscal=='N') {
-        cout << "Obrigado pela compra!" << endl;
-    }
-}
+// void submenu_realizar_venda(Vendas venda) {
+//     int codigoProduto,codigoVendedor,cpfComprador,quantidadeProduto;
+//     bool usuario = false, vendedor = false;
+//     char notaFiscal;
+//     do {
+//         cout << "Informe seu CPF:" << endl;
+//         cin >> cpfComprador;
+//         if (validar_cpf(cpfComprador)) {
+//             usuario = true;
+//             //chamar função da classe vendas
+//         } else {
+//             cout << "Insira um cpf valido e cadastrado." << endl;
+//         }
+//         system("cls");
+//     } while (!usuario);
+//     do {
+//         //imprimir todos os produtos disponíveis
+//         cout <<"Insira codigo do produto desejado (caso deseje finalizar a compra insira 0):"<<endl;
+//         cin >> codigoProduto;
+//         if (validar_produto(codigoProduto)) {
+//             cout <<"Insira quantas unidades desejadas:"<<endl;
+//             cin >> quantidadeProduto;
+//             // inicializar vetor de itens na classe vendas
+//         } else {
+//             cout << "Insira um codigo valido" << endl;
+//         }
+//         system("cls");
+//     } while (codigoProduto!=0);
+//     do {
+//         // imprimir todos os vendedores (direto pelo arquivo)
+//         cout << "Insira o codigo do vendedor que te atendeu" << endl;
+//         cin >> codigoVendedor;
+//         if (validar_vendedor(codigoVendedor)) {
+//             vendedor = true;
+//         } else {
+//             cout << "Insira um codigo valido" << endl;
+//         }
+//     } while (!vendedor);
+//
+//     // função inicializar objeto venda com todos os parametros gerados
+//
+//     cout<<"Deseja gerar nota fiscal? (digite s (sim) ou n (nao))"<<endl;
+//     cin >> notaFiscal;
+//     if (notaFiscal=='s' || notaFiscal=='S') {
+//         // gerar arquivo de nota fiscal
+//         cout << "Obrigado pela compra!" << endl;
+//     } else if (notaFiscal=='n' || notaFiscal=='N') {
+//         cout << "Obrigado pela compra!" << endl;
+//     }
+// }
 int main() {
     Vendas venda;
     // Carregar dados dos produtos ao iniciar o programa
@@ -223,7 +223,7 @@ int main() {
                 submenu_vendas(venda);
                 break;
             case 5:
-                submenu_realizar_venda(venda);
+                // submenu_realizar_venda(venda);
                 break;
             case 0:
                 cout << "Saindo..." << endl;
