@@ -1,45 +1,53 @@
-//
-// Created by nogue on 22/06/2025.
-//
-
 #ifndef COMPRADORES_H
 #define COMPRADORES_H
+
 #include <string>
-#include <iostream>
-
 using namespace std;
-class compradores {
-private:
-    int id;
-    string nome;
-    string email;
-    string cpf;
 
-public:
+struct Endereco {
+    string rua;
+    string bairro;
+    string cidade;
+    string estado;
+    string cep;
 
-    compradores(int id, const string& nome, const string& email, const string& cpf)
-        : id(id), nome(nome), email(email), cpf(cpf) {}
-
-
-    int getId() const { return id; }
-    string getNome() const { return nome; }
-    string getEmail() const { return email; }
-    string getCpf() const { return cpf; }
-
-
-    void setNome(const string& novoNome) { nome = novoNome; }
-    void setEmail(const string& novoEmail) { email = novoEmail; }
-    void setCpf(const string& novoCpf) { cpf = novoCpf; }
-
-    void exibir() const {
-        cout << "ID: " << id << endl;
-        cout << "Nome: " << nome << endl;
-        cout << "Email: " << email << endl;
-        cout << "CPF: " << cpf << endl;
+    string toString() const {
+        return rua + ";" + bairro + ";" + cidade + ";" + estado + ";" + cep;
     }
-
+    void exibir() const;
 };
 
+class Comprador {
+private:
+    string nome;
+    string cpf;
+    string email;
+    Endereco endereco;
+
+public:
+    Comprador();
+    Comprador(string nome, string cpf, string email, Endereco endereco);
+
+    string getCpf() const;
+    string toString() const;
+    void exibir() const;
+
+    void setNome(string nome);
+    void setEmail(string email);
+    void setEndereco(Endereco endereco);
 
 
-#endif //COMPRADORES_H
+    static bool validarCPF(const string& cpf);
+    static void inserirComprador(const Comprador& novo);
+    static bool alterarComprador(const string& cpf, const Comprador& novo);
+    static bool excluirComprador(const string& cpf);
+
+
+    static void inserirCompradorInterface();
+    static void consultarCompradorInterface();
+    static void alterarCompradorInterface();
+    static void excluirCompradorInterface();
+};
+
+#endif
+

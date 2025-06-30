@@ -85,16 +85,16 @@ void submenu_compradores() {
         cin.ignore();
         switch(opcao) {
             case 1:
-                cout << "Cadastrar Comprador (implementar)" << endl;
+                Comprador::inserirCompradorInterface();
                 break;
             case 2:
-                cout << "Consultar Comprador (implementar)" << endl;
+                Comprador::consultarCompradorInterface();
                 break;
             case 3:
-                cout << "Alterar Comprador (implementar)" << endl;
+                Comprador::alterarCompradorInterface();
                 break;
             case 4:
-                cout << "Excluir Comprador (implementar)" << endl;
+                Comprador::excluirCompradorInterface();
                 break;
             case 0:
                 break;
