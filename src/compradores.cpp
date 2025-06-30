@@ -308,7 +308,7 @@ void Comprador::excluirCompradorInterface() {
 }
 
 Comprador Comprador::buscarCompradorPorCPF(const string& cpfBusca) {
-    ifstream arquivo("./data/compradores.txt");
+    ifstream arquivo("../data/compradores.txt");
     if (!arquivo.is_open()) {
         cout << "Erro ao abrir arquivo para leitura!" << endl;
         return Comprador();

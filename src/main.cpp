@@ -217,7 +217,7 @@ void submenu_realizar_venda(Vendas venda,Vendedores vendedores, Produtos& produt
     bool vendedorValido = false;
     int codigoVendedor;
     do {
-        // imprimir todos os vendedores (direto pelo arq
+        vendedores.listarTodosVendedores();
         cout << "Insira o codigo do vendedor que te atendeu" << endl;
         cin >> codigoVendedor;
         if (vendedores.verificarNumero(codigoVendedor)) {
