@@ -91,7 +91,7 @@ void submenu_vendedores(Vendedores) {
     } while(opcao != 0);
 }
 
-void submenu_compradores() {
+void submenu_compradores(Comprador comprador) {
     int opcao;
     do {
         cout << "\n--- Gerenciar Compradores ---" << endl;
@@ -105,16 +105,16 @@ void submenu_compradores() {
         cin.ignore();
         switch(opcao) {
             case 1:
-                Comprador::inserirCompradorInterface();
+                comprador.inserirCompradorInterface();
                 break;
             case 2:
-                Comprador::consultarCompradorInterface();
+                comprador.consultarCompradorInterface();
                 break;
             case 3:
-                Comprador::alterarCompradorInterface();
+                comprador.alterarCompradorInterface();
                 break;
             case 4:
-                Comprador::excluirCompradorInterface();
+                comprador.excluirCompradorInterface();
                 break;
             case 0:
                 break;
@@ -223,7 +223,8 @@ int main() {
     Vendas venda;
     Produtos produtos;
     Vendedores vendedores;
-    
+    Comprador comprador;
+
     int opcao;
     do {
         cout << "\n===== MENU PRINCIPAL =====" << endl;
@@ -244,7 +245,7 @@ int main() {
                 submenu_vendedores(vendedores);
                 break;
             case 3:
-                submenu_compradores();
+                submenu_compradores(comprador);
                 break;
             case 4:
                 submenu_vendas(venda);
