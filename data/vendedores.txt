@@ -5,3 +5,17 @@ Salário fixo: 10000.00
 Comissão acumulada: 240.00
 Salário total (fixo + comissão): 10240.00
 ------------------------------
+Vendedor
+Numero: 747
+Nome: Pedrinho
+Salario fixo: 80000.00
+Comissao acumulada: 270.00
+Salario total (fixo + comissao): 80270.00
+------------------------------
+Vendedor
+Numero: 999
+Nome: Davizin
+Salario fixo: 7987.00
+Comissao acumulada: 0.00
+Salario total (fixo + comissao): 7987.00
+------------------------------

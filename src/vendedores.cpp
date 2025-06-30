@@ -293,21 +293,37 @@ void Vendedores::listarTodosVendedores() {
         return;
     }
 
-    cout << "\n=== LISTA DE VENDEDORES ===" << endl;
+    cout << "\n=== LISTA COMPLETA DE VENDEDORES ===" << endl;
     cout << left << setw(10) << "CODIGO" << "NOME" << endl;
-    cout << "--------------------------" << endl;
+    cout << "----------------------------------" << endl;
 
     string linha;
+    bool encontrouVendedor = false;
+
     while (getline(arquivo, linha)) {
-        if (linha.find("Numero: ") != string::npos) {
+        if (linha == "Vendedor") {
+            encontrouVendedor = true;
+
+            // Ler número
+            getline(arquivo, linha);
             string codigo = linha.substr(8);
+
+            // Ler nome
             getline(arquivo, linha);
             string nome = linha.substr(6);
 
             cout << left << setw(10) << codigo << nome << endl;
 
-            for (int i = 0; i < 4; i++) getline(arquivo, linha);
+            // Pular as linhas restantes do registro (4 linhas: salário, comissão, total, separador)
+            for (int i = 0; i < 4; i++) {
+                if (!getline(arquivo, linha)) break;
+            }
         }
     }
+
     arquivo.close();
+
+    if (!encontrouVendedor) {
+        cout << "Nenhum vendedor encontrado no arquivo!" << endl;
+    }
 }
