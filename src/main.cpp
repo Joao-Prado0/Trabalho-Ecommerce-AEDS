@@ -91,7 +91,7 @@ void submenu_vendedores(Vendedores) {
     } while(opcao != 0);
 }
 
-void submenu_compradores(Comprador comprador) {
+void submenu_compradores() {
     int opcao;
     do {
         cout << "\n--- Gerenciar Compradores ---" << endl;
@@ -105,16 +105,16 @@ void submenu_compradores(Comprador comprador) {
         cin.ignore();
         switch(opcao) {
             case 1:
-                comprador.inserirCompradorInterface();
+                Comprador::inserirCompradorInterface();
                 break;
             case 2:
-                comprador.consultarCompradorInterface();
+                Comprador::consultarCompradorInterface();
                 break;
             case 3:
-                comprador.alterarCompradorInterface();
+                Comprador::alterarCompradorInterface();
                 break;
             case 4:
-                comprador.excluirCompradorInterface();
+                Comprador::excluirCompradorInterface();
                 break;
             case 0:
                 break;
@@ -163,19 +163,19 @@ void submenu_vendas(Vendas venda) {
     } while(opcao != 0);
 }
 void submenu_realizar_venda(Vendas venda) {
-    int codigoProduto,codigoVendedor,cpfComprador,quantidadeProduto;
+    int codigoProduto,codigoVendedor,quantidadeProduto;
+    string cpfComprador;
     bool usuario = false, vendedor = false;
     char notaFiscal;
     do {
         cout << "Informe seu CPF:" << endl;
         cin >> cpfComprador;
-        // if (validar_cpf(cpfComprador)) {
-        //     usuario = true;
-        //     //chamar função da classe vendas
-        // } else {
-        //     cout << "Insira um cpf valido e cadastrado." << endl;
-        // }
-        usuario = true; // Temporário para teste
+        if (Comprador::validarCPF(cpfComprador)) {
+            usuario = true;
+            //chamar função da classe vendas
+        } else {
+            cout << "Insira um cpf valido e cadastrado." << endl;
+        }
         system("cls");
     } while (!usuario);
     do {
@@ -223,7 +223,6 @@ int main() {
     Vendas venda;
     Produtos produtos;
     Vendedores vendedores;
-    Comprador comprador;
 
     int opcao;
     do {
@@ -245,7 +244,7 @@ int main() {
                 submenu_vendedores(vendedores);
                 break;
             case 3:
-                submenu_compradores(comprador);
+                submenu_compradores();
                 break;
             case 4:
                 submenu_vendas(venda);
