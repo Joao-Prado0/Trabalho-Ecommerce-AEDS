@@ -218,7 +218,7 @@ void submenu_realizar_venda(Vendas venda,Vendedores vendedores, Produtos& produt
         cin >> codigoVendedor;
         if (vendedores.verificarNumero(codigoVendedor)) {
             vendedorValido = true;
-            vendedores.adicionarComissao();
+            vendedores.adicionarComissao(codigoVendedor);
         } else {
             cout << "Insira um codigo valido" << endl;
         }

@@ -28,3 +28,9 @@ Nome: SSD Kingston NV2 1TB M.2 NVMe
 Estoque: 10
 Preco: 459.90
 ---
+Produto:
+Codigo: 1006
+Nome: PS5 Slim
+Estoque: 15
+Preco: 3600.00
+---
