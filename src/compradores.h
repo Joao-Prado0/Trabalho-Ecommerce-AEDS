@@ -11,10 +11,10 @@ struct Endereco {
     string estado;
     string cep;
 
+    void exibir() const;
     string toString() const {
         return rua + ";" + bairro + ";" + cidade + ";" + estado + ";" + cep;
     }
-    void exibir() const;
 };
 
 class Comprador {
@@ -32,17 +32,12 @@ public:
     string toString() const;
     void exibir() const;
 
-    void setNome(string nome);
-    void setEmail(string email);
-    void setEndereco(Endereco endereco);
-
-
     static bool validarCPF(const string& cpf);
     static void inserirComprador(const Comprador& novo);
     static bool alterarComprador(const string& cpf, const Comprador& novo);
     static bool excluirComprador(const string& cpf);
 
-
+    // Interfaces para o usuário (main.cpp)
     static void inserirCompradorInterface();
     static void consultarCompradorInterface();
     static void alterarCompradorInterface();
@@ -50,4 +45,5 @@ public:
 };
 
 #endif
+
 
