@@ -8,8 +8,9 @@
 #include <iomanip>
 #include <cmath>
 using namespace std;
+// -------------------------------------- Construtor ----------------------------------------
 Vendas::Vendas(){}
-
+// -------------------------------------- Uteis -----------------------------------------------
 int Vendas::criar_codigoVenda() {
     static bool inicializado = false;
     if (!inicializado) {
@@ -22,7 +23,15 @@ int Vendas::criar_codigoVenda() {
     } while (verificar_codigo(codigo));
     return codigo;
 }
-
+float Vendas::calcular_frete(float valorT) {
+    if (valorT<=100.00) {
+        return 30.00;
+    }
+    if (valorT>100.00 && valorT<=300.00) {
+        return 20.00;
+    }
+    return 0.00;
+}
 bool Vendas::verificar_codigo(int codigo) {
     ifstream arquivo("../data/vendas.txt");
     string linha;
@@ -33,6 +42,7 @@ bool Vendas::verificar_codigo(int codigo) {
     }
     return false;
 }
+
 Vendas Vendas::inicializar_com_codigo(int codigoV) {
     return Vendas();
 }
@@ -52,15 +62,8 @@ Vendas Vendas::inicializar_com_codigo(int codigoV) {
 bool Vendas::verificar_estoque() {
     return true;
 }
-float Vendas::calcular_frete(float valorT) {
-    if (valorT<=100.00) {
-        return 30.00;
-    }
-    if (valorT>100.00 && valorT<=300.00) {
-        return 20.00;
-    }
-    return 0.00;
-}
+
+// ------------------------------------------ CRUD--------------------------------------------
 void Vendas::consultar_venda(int codigoV) {
     ifstream arquivo("../data/vendas.txt");
     string linha;

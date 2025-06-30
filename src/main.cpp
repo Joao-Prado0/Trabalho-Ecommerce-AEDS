@@ -176,7 +176,7 @@ void submenu_realizar_venda(Vendas venda) {
         system("cls");
     } while (codigoProduto!=0);
     do {
-        // imprimir todos os vendedores (direto pelo arquivo)
+        // imprimir todos os vendedores (direto pelo arq
         cout << "Insira o codigo do vendedor que te atendeu" << endl;
         cin >> codigoVendedor;
         // if (validar_vendedor(codigoVendedor)) {
