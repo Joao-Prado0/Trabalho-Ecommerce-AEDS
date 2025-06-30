@@ -9,8 +9,8 @@ Vendedor
 Numero: 747
 Nome: Pedrinho
 Salario fixo: 80000.00
-Comissao acumulada: 270.00
-Salario total (fixo + comissao): 80270.00
+Comissao acumulada: 420.00
+Salario total (fixo + comissao): 80420.00
 ------------------------------
 Vendedor
 Numero: 999

@@ -28,6 +28,7 @@ public:
     void salvarNoArquivo();
     void atualizarArquivo();
     void adicionarComissao(float valorVenda);
+    void adicionarComissaoPorNumero(int numeroVendedor, float valorVenda);
     void consultarVendedor(int numConsulta);
     void alterarVendedor(int numeroAlvo);
     void excluirVendedor(int numeroAlvo);

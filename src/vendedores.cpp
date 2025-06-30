@@ -120,15 +120,67 @@ void Vendedores::atualizarArquivo() {
     rename("../data/temp.txt", "../data/vendedores.txt");
 }
 
-void Vendedores::adicionarComissao(float valorVenda) {
+void Vendedores::adicionarComissaoPorNumero(int numeroVendedor, float valorVenda) {
+    ifstream entrada("../data/vendedores.txt");
+    ofstream temp("../data/temp.txt");
+
+    string linha;
+    bool encontrado = false;
     float comissao = valorVenda * 0.03f;
-    comissaoAcumulada += comissao;
-    calcularSalarioTotal();
+    float comissaoAtual = 0.0f;
+    float salarioFixo = 0.0f;
+    string nomeVendedor;
 
-    cout << "\nComissao de R$ " << comissao << " adicionada!\n";
-    cout << "Total acumulado: R$ " << comissaoAcumulada << endl;
+    while (getline(entrada, linha)) {
+        if (linha == "Vendedor") {
+            string bloco[6];
+            bloco[0] = linha;
+            for (int i = 1; i < 6; ++i) {
+                getline(entrada, bloco[i]);
+            }
 
-    atualizarArquivo();
+            int num = stoi(bloco[1].substr(8));
+            if (num == numeroVendedor) {
+                encontrado = true;
+                nomeVendedor = bloco[2].substr(6);
+                salarioFixo = stof(bloco[3].substr(13));
+                comissaoAtual = stof(bloco[4].substr(19));
+                float novaComissao = comissaoAtual + comissao;
+                float salarioTotal = salarioFixo + novaComissao;
+
+                temp << "Vendedor\n"
+                     << "Numero: " << numeroVendedor << "\n"
+                     << "Nome: " << nomeVendedor << "\n"
+                     << fixed << setprecision(2)
+                     << "Salario fixo: " << salarioFixo << "\n"
+                     << "Comissao acumulada: " << novaComissao << "\n"
+                     << "Salario total (fixo + comissao): " << salarioTotal << "\n";
+            } else {
+                for (const auto& l : bloco) {
+                    temp << l << "\n";
+                }
+            }
+            getline(entrada, linha);
+            temp << "------------------------------\n";
+        }
+    }
+
+    entrada.close();
+    temp.close();
+
+    remove("../data/vendedores.txt");
+    rename("../data/temp.txt", "../data/vendedores.txt");
+
+    if (encontrado) {
+        cout << "\nComissao de R$ " << fixed << setprecision(2) << comissao
+             << " adicionada ao vendedor " << numeroVendedor << " (" << nomeVendedor << ")!\n";
+        cout << "Total acumulado: R$ " << (comissaoAtual + comissao) << endl;
+    } else {
+        cout << "Vendedor nao encontrado!" << endl;
+    }
+}
+void Vendedores::adicionarComissao(float valorVenda) {
+    adicionarComissaoPorNumero(this->numero, valorVenda);
 }
 
 void Vendedores::consultarVendedor(int numConsulta) {

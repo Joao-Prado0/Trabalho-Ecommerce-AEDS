@@ -82,7 +82,7 @@ void submenu_vendedores(Vendedores) {
                 cin >> numero;
                 cout << "Valor da venda: R$ ";
                 cin >> valor;
-                gerenciador.adicionarComissao(valor);
+                gerenciador.adicionarComissaoPorNumero(numero,valor);
                 break;
             case 6:
                 gerenciador.listarTodosVendedores();
