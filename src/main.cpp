@@ -38,35 +38,55 @@ void submenu_produtos(Produtos& produtos) {
     } while(opcao != 0);
 }
 
-void submenu_vendedores() {
-    int opcao;
+void submenu_vendedores(Vendedores) {
+    static Vendedores gerenciador;
+    int opcao, numero;
+    float valor;
+
     do {
-        cout << "\n--- Gerenciar Vendedores ---" << endl;
+        cout << "\n=== GERENCIAMENTO DE VENDEDORES ===" << endl;
         cout << "1. Cadastrar Vendedor" << endl;
         cout << "2. Consultar Vendedor" << endl;
         cout << "3. Alterar Vendedor" << endl;
         cout << "4. Excluir Vendedor" << endl;
+        cout << "5. Adicionar Comissão" << endl;
         cout << "0. Voltar" << endl;
-        cout << "Escolha uma opcao: ";
+        cout << "Opção: ";
         cin >> opcao;
-        cin.ignore();
+
         switch(opcao) {
             case 1:
-                cout << "Cadastrar Vendedor (implementar)" << endl;
+                gerenciador.setNumero();
+                gerenciador.setNome();
+                gerenciador.setSalarioFixo();
+                gerenciador.salvarNoArquivo();
                 break;
             case 2:
-                cout << "Consultar Vendedor (implementar)" << endl;
+                cout << "Número do vendedor: ";
+                cin >> numero;
+                gerenciador.consultarVendedor(numero);
                 break;
             case 3:
-                cout << "Alterar Vendedor (implementar)" << endl;
+                cout << "Número do vendedor: ";
+                cin >> numero;
+                gerenciador.alterarVendedor(numero);
                 break;
             case 4:
-                cout << "Excluir Vendedor (implementar)" << endl;
+                cout << "Número do vendedor: ";
+                cin >> numero;
+                gerenciador.excluirVendedor(numero);
+                break;
+            case 5:
+                cout << "Número do vendedor: ";
+                cin >> numero;
+                cout << "Valor da venda: R$ ";
+                cin >> valor;
+                gerenciador.adicionarComissao(valor);
                 break;
             case 0:
                 break;
             default:
-                cout << "Opcao invalida!" << endl;
+                cout << "Opção inválida!" << endl;
         }
     } while(opcao != 0);
 }
@@ -202,6 +222,7 @@ int main() {
     cout << "=== PROGRAMA INICIADO - VERSAO ATUALIZADA ===" << endl;
     Vendas venda;
     Produtos produtos;
+    Vendedores vendedores;
     
     int opcao;
     do {
@@ -220,7 +241,7 @@ int main() {
                 submenu_produtos(produtos);
                 break;
             case 2:
-                submenu_vendedores();
+                submenu_vendedores(vendedores);
                 break;
             case 3:
                 submenu_compradores();

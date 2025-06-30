@@ -1,1 +1,7 @@
-Opa tudo bom
+Vendedor
+Número: 454
+Nome: Joao Prado
+Salário fixo: 10000.00
+Comissão acumulada: 240.00
+Salário total (fixo + comissão): 10240.00
+------------------------------
