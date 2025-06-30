@@ -6,12 +6,30 @@
 
 using namespace std;
 
-
 void Endereco::exibir() const {
     cout << "Rua: " << rua << ", Bairro: " << bairro << ", Cidade: " << cidade
          << ", Estado: " << estado << ", CEP: " << cep << endl;
 }
 
+string Comprador::toString() const {
+    return nome + ";" + cpf + ";" + email + ";" + endereco.toString();
+}
+
+// NOVO: método para salvar formatado
+string Comprador::toStringFormatado() const {
+    stringstream ss;
+    ss << "Comprador:\n";
+    ss << "Nome: " << nome << "\n";
+    ss << "CPF: " << cpf << "\n";
+    ss << "Email: " << email << "\n";
+    ss << "Rua: " << endereco.rua << "\n";
+    ss << "Bairro: " << endereco.bairro << "\n";
+    ss << "Cidade: " << endereco.cidade << "\n";
+    ss << "Estado: " << endereco.estado << "\n";
+    ss << "CEP: " << endereco.cep << "\n";
+    ss << "---\n";
+    return ss.str();
+}
 
 Comprador::Comprador() {}
 
@@ -22,33 +40,23 @@ string Comprador::getCpf() const {
     return cpf;
 }
 
-string Comprador::toString() const {
-    return nome + ";" + cpf + ";" + email + ";" + endereco.toString();
-}
-
 void Comprador::exibir() const {
     cout << "Nome: " << nome << "\nCPF: " << cpf << "\nEmail: " << email << endl;
     endereco.exibir();
 }
 
-
-
-bool Comprador::validarCPF(const string& cpf) {
+bool Comprador::validarCPF(const string& cpfBusca) {
     ifstream arquivo("../data/compradores.txt");
     if (!arquivo.is_open()) {
         cout << "Erro ao abrir arquivo para leitura!" << endl;
         return false;
     }
 
-    string linha;
+    string linha, cpf;
     while (getline(arquivo, linha)) {
-        stringstream ss(linha);
-        string nomeArq, cpfArq;
-        getline(ss, nomeArq, ';');
-        getline(ss, cpfArq, ';');
-
-        if (cpfArq == cpf) {
-            return true;
+        if (linha.find("CPF: ") == 0) {
+            cpf = linha.substr(5);
+            if (cpf == cpfBusca) return true;
         }
     }
 
@@ -61,30 +69,36 @@ void Comprador::inserirComprador(const Comprador& novo) {
         cout << "Erro ao abrir arquivo para escrita!" << endl;
         return;
     }
-
-    arquivo << novo.toString() << endl;
+    arquivo << novo.toStringFormatado();
     arquivo.close();
 }
 
-bool Comprador::alterarComprador(const string& cpf, const Comprador& novo) {
+bool Comprador::alterarComprador(const string& cpfBusca, const Comprador& novo) {
     ifstream arquivoLeitura("../data/compradores.txt");
     if (!arquivoLeitura.is_open()) return false;
 
-    string linha;
+    string linha, bloco, cpf;
     string resultadoFinal = "";
     bool encontrado = false;
 
     while (getline(arquivoLeitura, linha)) {
-        stringstream ss(linha);
-        string nomeArq, cpfArq;
-        getline(ss, nomeArq, ';');
-        getline(ss, cpfArq, ';');
-
-        if (cpfArq == cpf) {
-            resultadoFinal += novo.toString() + "\n";
-            encontrado = true;
+        if (linha == "Comprador:") {
+            bloco = linha + "\n";
+            cpf = "";
+        } else if (linha.find("CPF: ") == 0) {
+            cpf = linha.substr(5);
+            bloco += linha + "\n";
+        } else if (linha == "---") {
+            bloco += linha + "\n";
+            if (cpf == cpfBusca) {
+                resultadoFinal += novo.toStringFormatado();
+                encontrado = true;
+            } else {
+                resultadoFinal += bloco;
+            }
+            bloco = "";
         } else {
-            resultadoFinal += linha + "\n";
+            bloco += linha + "\n";
         }
     }
 
@@ -93,7 +107,6 @@ bool Comprador::alterarComprador(const string& cpf, const Comprador& novo) {
     if (encontrado) {
         ofstream arquivoEscrita("../data/compradores.txt", ios::trunc);
         if (!arquivoEscrita.is_open()) return false;
-
         arquivoEscrita << resultadoFinal;
         arquivoEscrita.close();
     }
@@ -101,25 +114,32 @@ bool Comprador::alterarComprador(const string& cpf, const Comprador& novo) {
     return encontrado;
 }
 
-bool Comprador::excluirComprador(const string& cpf) {
+bool Comprador::excluirComprador(const string& cpfBusca) {
     ifstream arquivoLeitura("../data/compradores.txt");
     if (!arquivoLeitura.is_open()) return false;
 
-    string linha;
+    string linha, bloco, cpf;
     string resultadoFinal = "";
     bool encontrado = false;
 
     while (getline(arquivoLeitura, linha)) {
-        stringstream ss(linha);
-        string nomeArq, cpfArq;
-        getline(ss, nomeArq, ';');
-        getline(ss, cpfArq, ';');
-
-        if (cpfArq == cpf) {
-            encontrado = true;
-            continue;
+        if (linha == "Comprador:") {
+            bloco = linha + "\n";
+            cpf = "";
+        } else if (linha.find("CPF: ") == 0) {
+            cpf = linha.substr(5);
+            bloco += linha + "\n";
+        } else if (linha == "---") {
+            bloco += linha + "\n";
+            if (cpf == cpfBusca) {
+                encontrado = true;
+            } else {
+                resultadoFinal += bloco;
+            }
+            bloco = "";
+        } else {
+            bloco += linha + "\n";
         }
-        resultadoFinal += linha + "\n";
     }
 
     arquivoLeitura.close();
@@ -127,7 +147,6 @@ bool Comprador::excluirComprador(const string& cpf) {
     if (encontrado) {
         ofstream arquivoEscrita("../data/compradores.txt", ios::trunc);
         if (!arquivoEscrita.is_open()) return false;
-
         arquivoEscrita << resultadoFinal;
         arquivoEscrita.close();
     }
@@ -135,7 +154,7 @@ bool Comprador::excluirComprador(const string& cpf) {
     return encontrado;
 }
 
-// ====== Interfaces para main.cpp ======
+
 
 void Comprador::inserirCompradorInterface() {
     string nome, cpf, email;
@@ -172,9 +191,9 @@ void Comprador::inserirCompradorInterface() {
 }
 
 void Comprador::consultarCompradorInterface() {
-    string cpf;
+    string cpfBusca;
     cout << "Digite o CPF do comprador: ";
-    getline(cin, cpf);
+    getline(cin, cpfBusca);
 
     ifstream arquivo("../data/compradores.txt");
     if (!arquivo.is_open()) {
@@ -183,33 +202,44 @@ void Comprador::consultarCompradorInterface() {
     }
 
     string linha;
+    string nome, cpf, email, rua, bairro, cidade, estado, cep;
     bool encontrado = false;
 
     while (getline(arquivo, linha)) {
-        stringstream ss(linha);
-        string nome, cpfArq, email, rua, bairro, cidade, estado, cep;
-
-        getline(ss, nome, ';');
-        getline(ss, cpfArq, ';');
-        getline(ss, email, ';');
-        getline(ss, rua, ';');
-        getline(ss, bairro, ';');
-        getline(ss, cidade, ';');
-        getline(ss, estado, ';');
-        getline(ss, cep, ';');
-
-        if (cpfArq == cpf) {
-            Endereco end{rua, bairro, cidade, estado, cep};
-            Comprador encontradoComprador(nome, cpfArq, email, end);
-            encontradoComprador.exibir();
-            encontrado = true;
-            break;
+        if (linha.find("Comprador:") != string::npos) {
+            nome = cpf = email = rua = bairro = cidade = estado = cep = "";
+        } else if (linha.find("Nome: ") == 0) {
+            nome = linha.substr(6);
+        } else if (linha.find("CPF: ") == 0) {
+            cpf = linha.substr(5);
+        } else if (linha.find("Email: ") == 0) {
+            email = linha.substr(7);
+        } else if (linha.find("Rua: ") == 0) {
+            rua = linha.substr(6);
+        } else if (linha.find("Bairro: ") == 0) {
+            bairro = linha.substr(8);
+        } else if (linha.find("Cidade: ") == 0) {
+            cidade = linha.substr(8);
+        } else if (linha.find("Estado: ") == 0) {
+            estado = linha.substr(8);
+        } else if (linha.find("CEP: ") == 0) {
+            cep = linha.substr(5);
+        } else if (linha.find("---") != string::npos) {
+            if (cpf == cpfBusca) {
+                Endereco endereco{rua, bairro, cidade, estado, cep};
+                Comprador compradorEncontrado(nome, cpf, email, endereco);
+                compradorEncontrado.exibir();
+                encontrado = true;
+                break;
+            }
         }
     }
 
     if (!encontrado) {
         cout << "Comprador nao encontrado!" << endl;
     }
+
+    arquivo.close();
 }
 
 void Comprador::alterarCompradorInterface() {

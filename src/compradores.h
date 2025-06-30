@@ -12,6 +12,7 @@ struct Endereco {
     string cep;
 
     void exibir() const;
+
     string toString() const {
         return rua + ";" + bairro + ";" + cidade + ";" + estado + ";" + cep;
     }
@@ -30,6 +31,7 @@ public:
 
     string getCpf() const;
     string toString() const;
+    string toStringFormatado() const;
     void exibir() const;
 
     static bool validarCPF(const string& cpf);
@@ -37,7 +39,7 @@ public:
     static bool alterarComprador(const string& cpf, const Comprador& novo);
     static bool excluirComprador(const string& cpf);
 
-    // Interfaces para o usuário (main.cpp)
+
     static void inserirCompradorInterface();
     static void consultarCompradorInterface();
     static void alterarCompradorInterface();
@@ -45,5 +47,6 @@ public:
 };
 
 #endif
+
 
 
