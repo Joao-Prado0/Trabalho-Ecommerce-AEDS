@@ -31,6 +31,7 @@ public:
     void consultarVendedor(int numConsulta);
     void alterarVendedor(int numeroAlvo);
     void excluirVendedor(int numeroAlvo);
+    void listarTodosVendedores();
 };
 
 #endif

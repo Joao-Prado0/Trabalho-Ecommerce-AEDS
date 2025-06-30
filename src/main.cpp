@@ -49,9 +49,10 @@ void submenu_vendedores(Vendedores) {
         cout << "2. Consultar Vendedor" << endl;
         cout << "3. Alterar Vendedor" << endl;
         cout << "4. Excluir Vendedor" << endl;
-        cout << "5. Adicionar Comissão" << endl;
+        cout << "5. Adicionar Comissao" << endl;
+        cout << "6. Listar Todos Vendedores" << endl;
         cout << "0. Voltar" << endl;
-        cout << "Opção: ";
+        cout << "Opcao: ";
         cin >> opcao;
 
         switch(opcao) {
@@ -62,31 +63,34 @@ void submenu_vendedores(Vendedores) {
                 gerenciador.salvarNoArquivo();
                 break;
             case 2:
-                cout << "Número do vendedor: ";
+                cout << "Numero do vendedor: ";
                 cin >> numero;
                 gerenciador.consultarVendedor(numero);
                 break;
             case 3:
-                cout << "Número do vendedor: ";
+                cout << "Numero do vendedor: ";
                 cin >> numero;
                 gerenciador.alterarVendedor(numero);
                 break;
             case 4:
-                cout << "Número do vendedor: ";
+                cout << "Numero do vendedor: ";
                 cin >> numero;
                 gerenciador.excluirVendedor(numero);
                 break;
             case 5:
-                cout << "Número do vendedor: ";
+                cout << "Numero do vendedor: ";
                 cin >> numero;
                 cout << "Valor da venda: R$ ";
                 cin >> valor;
                 gerenciador.adicionarComissao(valor);
                 break;
+            case 6:
+                gerenciador.listarTodosVendedores();
+                break;
             case 0:
                 break;
             default:
-                cout << "Opção inválida!" << endl;
+                cout << "Opcao invalida!" << endl;
         }
     } while(opcao != 0);
 }
