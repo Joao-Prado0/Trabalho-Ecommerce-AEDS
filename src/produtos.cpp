@@ -32,11 +32,13 @@ bool Produtos::inserir_produto(const string& nome, int codigo, int quantidade, f
     return true;
 }
 
-Produto* Produtos::consultar_produto(int codigo) {
-    for (auto& p : lista_produtos) {
-        if (p.codigo == codigo) return &p;
+Produto Produtos::consultar_produto(int codigo) {
+    for (const auto& p : lista_produtos) {
+        if (p.codigo == codigo) return p;
     }
-    return nullptr;
+    Produto naoEncontrado;
+    naoEncontrado.encontrado = false;
+    return naoEncontrado;
 }
 
 bool Produtos::alterar_produto(int codigo, const string* novo_nome, int nova_quantidade, float novo_preco) {

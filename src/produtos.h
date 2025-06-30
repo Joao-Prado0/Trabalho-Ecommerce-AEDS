@@ -10,6 +10,7 @@ struct Produto {
     int quantidadeEstoque;
     float precoVenda;
     Produto() = default;
+    bool encontrado = true;
 };
 
 class Produtos {
@@ -21,7 +22,7 @@ public:
     Produtos();
     int gerarCodigoAutomatico();
     bool inserir_produto(const string& nome, int codigo, int quantidade, float preco);
-    Produto* consultar_produto(int codigo);
+    Produto consultar_produto(int codigo);
     bool alterar_produto(int codigo, const string* novo_nome, int nova_quantidade, float novo_preco);
     bool excluir_produto(int codigo);
     void listar_produtos();

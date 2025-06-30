@@ -44,6 +44,8 @@ public:
     static void consultarCompradorInterface();
     static void alterarCompradorInterface();
     static void excluirCompradorInterface();
+
+    static Comprador buscarCompradorPorCPF(const string &cpfBusca);
 };
 
 #endif

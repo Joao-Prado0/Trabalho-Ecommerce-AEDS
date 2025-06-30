@@ -307,4 +307,35 @@ void Comprador::excluirCompradorInterface() {
     }
 }
 
+Comprador Comprador::buscarCompradorPorCPF(const string& cpfBusca) {
+    ifstream arquivo("./data/compradores.txt");
+    if (!arquivo.is_open()) {
+        cout << "Erro ao abrir arquivo para leitura!" << endl;
+        return Comprador();
+    }
+
+    string linha;
+    string nome, cpf, email, rua, bairro, cidade, estado, cep;
+
+    while (getline(arquivo, linha)) {
+        if (linha.find("Comprador:") == 0) {
+            nome = cpf = email = rua = bairro = cidade = estado = cep = "";
+        } else if (linha.find("Nome: ")   == 0) nome   = linha.substr(6);
+        else if (linha.find("CPF: ")      == 0) cpf    = linha.substr(5);
+        else if (linha.find("Email: ")    == 0) email  = linha.substr(7);
+        else if (linha.find("Rua: ")      == 0) rua    = linha.substr(5);
+        else if (linha.find("Bairro: ")   == 0) bairro = linha.substr(8);
+        else if (linha.find("Cidade: ")   == 0) cidade = linha.substr(8);
+        else if (linha.find("Estado: ")   == 0) estado = linha.substr(8);
+        else if (linha.find("CEP: ")      == 0) cep    = linha.substr(5);
+        else if (linha == "---") {
+            if (cpf == cpfBusca) {
+                Endereco e{rua, bairro, cidade, estado, cep};
+                return Comprador(nome, cpf, email, e);
+            }
+        }
+    }
+    return Comprador();
+}
+
 

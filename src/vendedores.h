@@ -16,11 +16,12 @@ private:
     float comissaoAcumulada;
     float salarioTotal;
 
-    bool verificarNumero(int num);
+
     void calcularSalarioTotal();
 
 public:
     Vendedores();
+    bool verificarNumero(int num);
     void setNumero();
     void setNome();
     void setSalarioFixo();
