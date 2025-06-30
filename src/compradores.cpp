@@ -15,7 +15,7 @@ string Comprador::toString() const {
     return nome + ";" + cpf + ";" + email + ";" + endereco.toString();
 }
 
-// NOVO: método para salvar formatado
+// NOVO: para salvar formatado
 string Comprador::toStringFormatado() const {
     stringstream ss;
     ss << "Comprador:\n";
@@ -215,7 +215,7 @@ void Comprador::consultarCompradorInterface() {
         } else if (linha.find("Email: ") == 0) {
             email = linha.substr(7);
         } else if (linha.find("Rua: ") == 0) {
-            rua = linha.substr(6);
+            rua = linha.substr(5);
         } else if (linha.find("Bairro: ") == 0) {
             bairro = linha.substr(8);
         } else if (linha.find("Cidade: ") == 0) {
