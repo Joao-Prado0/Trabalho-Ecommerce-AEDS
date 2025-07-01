@@ -42,27 +42,6 @@ bool Vendas::verificar_codigo(int codigo) {
     }
     return false;
 }
-
-Vendas Vendas::inicializar_com_codigo(int codigoV) {
-    return Vendas();
-}
-// void Vendas::aicionar_item(int codigoItem,int quant) {
-//     Produtos item = Produtos::buscar_codigo_produto(codigoItem);
-//     ItemVenda produtoSolicitado;
-//     if (verificar_estoque(codigoItem,quant)) {
-//         produtoSolicitado.quantidadeVendida = quant;
-//         produtoSolicitado.precoTotal = item.preco * quant;
-//         produtoSolicitado.codigoProduto = codigoItem;
-//         produtoSolicitado.nomeProduto = item.nome;
-//         produtoSolicitado.precoUnitario = item.preco;
-//     } else {
-//         cout << "O produto: "<<item.nome<<". Esta esgotado"<<endl;
-//     }
-// }
-bool Vendas::verificar_estoque() {
-    return true;
-}
-
 // ------------------------------------------ CRUD--------------------------------------------
 void Vendas::consultar_venda(int codigoV) {
     ifstream arquivo("../data/vendas.txt");
@@ -446,4 +425,45 @@ void Vendas::imprimir_no_documento(int codigoV,int codigoVR, string nome, float 
     // talvez colocar função que seta a comissão do vendedor automaticamente.
     arquivo.close();
     cout << "Venda registrada com sucesso! Codigo gerado: "<< codigoV<< endl;
+}
+//------------------------------------ Nota Fiscal ------------------------------
+void Vendas::imprimir_nota_fiscal(Comprador compradorAtual,ItemVenda carrinho[],int contadorDeProdutos, float valorCompra) {
+    string nomeArquivo = "NotaFiscal"+compradorAtual.getCpf()+".txt";
+    ofstream arquivo(nomeArquivo);
+    if (!arquivo.is_open()) {
+        cerr << "Erro ao criar a nota fiscal"<<endl;
+        return;
+    }
+
+    arquivo << "==========================================="<< endl;
+    arquivo << "              NOTA FISCAL" << endl;
+    arquivo << "==========================================="<< endl;
+    arquivo << "\n";
+    arquivo << "Codigo da Venda: " << criar_codigoVenda() << endl;
+    arquivo << "\n";
+    arquivo << "Comprador(a):"<<endl;
+    arquivo << "Nome: " << compradorAtual.getNome() << endl;
+    arquivo << "CPF: " << compradorAtual.getCpf() << endl;
+    arquivo << "Endereco: " << compradorAtual.getEndereco() << endl;
+    arquivo << "\n";
+    arquivo << "-------------------------------------------" << endl;
+    arquivo << "Itens da Venda:" << endl;
+    arquivo << "-------------------------------------------" << endl;
+    arquivo << "Código | Nome do Produto     | Qtde | Unitário (R$) | Total (R$)" << endl;
+    arquivo << "-------|---------------------|------|---------------|-----------" << endl;
+    for (int i = 0; i<contadorDeProdutos; i++) {
+        arquivo << setw(6) << carrinho[i].codigoProduto << " | "
+            << setw(20) << left << carrinho[i].nomeProduto << " | "
+            << setw(4) << carrinho[i].quantidadeVendida << " | "
+            << setw(14) << fixed << setprecision(2) << carrinho[i].precoUnitario << " | "
+            << setw(10) << carrinho[i].precoTotal << "\n";
+    }
+    arquivo << "-------------------------------------------"<<endl;
+    arquivo << "Frete: R$ " << calcular_frete(valorCompra) << endl;
+    arquivo << "Total da Compra: R$ " << calcular_frete(valorCompra)+valorCompra << endl;
+    arquivo << "===========================================" << endl;
+
+    delete[] carrinho;
+    arquivo.close();
+    cout << "Nota fiscal gerada com sucesso: " << nomeArquivo << endl;
 }

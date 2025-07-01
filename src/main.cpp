@@ -221,11 +221,10 @@ void submenu_realizar_venda(Vendas venda,Vendedores vendedores, Produtos& produt
         cin >> codigoVendedor;
         if (vendedores.verificarNumero(codigoVendedor)) {
             vendedorValido = true;
-            vendedores.adicionarComissao(codigoVendedor);
+            vendedores.adicionarComissaoPorNumero(codigoVendedor,valorTotal);
         } else {
             cout << "Insira um codigo valido" << endl;
         }
-
     } while (!vendedorValido);
 //----------------------------------------------------------------------
     // função inicializar objeto venda com todos os parametros gerados

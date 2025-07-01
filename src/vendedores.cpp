@@ -171,13 +171,6 @@ void Vendedores::adicionarComissaoPorNumero(int numeroVendedor, float valorVenda
     remove("../data/vendedores.txt");
     rename("../data/temp.txt", "../data/vendedores.txt");
 
-    if (encontrado) {
-        cout << "\nComissao de R$ " << fixed << setprecision(2) << comissao
-             << " adicionada ao vendedor " << numeroVendedor << " (" << nomeVendedor << ")!\n";
-        cout << "Total acumulado: R$ " << (comissaoAtual + comissao) << endl;
-    } else {
-        cout << "Vendedor nao encontrado!" << endl;
-    }
 }
 void Vendedores::adicionarComissao(float valorVenda) {
     adicionarComissaoPorNumero(this->numero, valorVenda);
