@@ -449,8 +449,8 @@ void Vendas::imprimir_nota_fiscal(Comprador compradorAtual,ItemVenda carrinho[],
     arquivo << "-------------------------------------------" << endl;
     arquivo << "Itens da Venda:" << endl;
     arquivo << "-------------------------------------------" << endl;
-    arquivo << "Código | Nome do Produto     | Qtde | Unitário (R$) | Total (R$)" << endl;
-    arquivo << "-------|---------------------|------|---------------|-----------" << endl;
+    arquivo << "Código | Nome do Produto              | Qtde | Unitário (R$) | Total (R$)" << endl;
+    arquivo << "-------|------------------------------|------|---------------|-----------" << endl;
     for (int i = 0; i<contadorDeProdutos; i++) {
         arquivo << setw(6) << carrinho[i].codigoProduto << " | "
             << setw(20) << left << carrinho[i].nomeProduto << " | "

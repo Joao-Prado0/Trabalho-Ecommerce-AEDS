@@ -175,18 +175,19 @@ void submenu_realizar_venda(Vendas venda,Vendedores vendedores, Produtos& produt
         if (!compradorAtual.getCpf().empty()) {
             usuarioValido = true;
         } else {
-            cout << "CPF não encontrado. Tente novamente.\n";
+            cout << "CPF não encontrado. Insira um cpf cadastrado ou cadastre um novo usuário.\n";
         }
         cin.ignore();
         system("cls");
     } while (!usuarioValido);
     //-------------------------------------------------------------------------------------
-    auto carrinhoCompra = new ItemVenda;
-    int  codigoProduto;
+    int maxItens = 100;
+    ItemVenda *carrinhoCompra = new ItemVenda[maxItens];
+    int  codigoProduto = 1;
     int  quantidadeProd;
     int  contadorDeProdutos = 0;
     float valorTotal = 0.00f;
-     while (codigoProduto!=0){
+     while (codigoProduto!=0 && contadorDeProdutos<maxItens){
         produto.listar_produtos();
         cout <<"Insira codigo do produto desejado (caso deseje finalizar a compra insira 0):"<<endl;
         cin >> codigoProduto;
@@ -227,12 +228,11 @@ void submenu_realizar_venda(Vendas venda,Vendedores vendedores, Produtos& produt
         }
     } while (!vendedorValido);
 //----------------------------------------------------------------------
-    // função inicializar objeto venda com todos os parametros gerados
     char notaFiscal;
     cout<<"Deseja gerar nota fiscal? (digite s (sim) ou n (nao))"<<endl;
     cin >> notaFiscal;
     if (notaFiscal=='s' || notaFiscal=='S') {
-        // gerar arquivo de nota fiscal
+        venda.imprimir_nota_fiscal(compradorAtual,carrinhoCompra,contadorDeProdutos,valorTotal);
         cout << "Obrigado pela compra!" << endl;
     } else if (notaFiscal=='n' || notaFiscal=='N') {
         cout << "Obrigado pela compra!" << endl;
