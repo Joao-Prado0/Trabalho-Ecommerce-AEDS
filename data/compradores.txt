@@ -1,0 +1,20 @@
+Comprador:
+Nome: teste
+CPF: 123456
+Email: teste@gmail.com
+Rua: teste
+Bairro: testado
+Cidade: testada
+Estado: tg
+CEP: 6543217
+---
+Comprador:
+Nome: pedor
+CPF: 76594373
+Email: pedro@gmail.com
+Rua: nova
+Bairro: coreu
+Cidade: bh
+Estado: mg
+CEP: 784822
+---

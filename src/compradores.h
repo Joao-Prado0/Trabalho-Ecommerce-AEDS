@@ -30,6 +30,11 @@ public:
     Comprador(string nome, string cpf, string email, Endereco endereco);
 
     string getCpf() const;
+
+    string getNome();
+
+    string getEndereco();
+
     string toString() const;
     string toStringFormatado() const;
     void exibir() const;
@@ -44,9 +49,12 @@ public:
     static void consultarCompradorInterface();
     static void alterarCompradorInterface();
     static void excluirCompradorInterface();
+
+    static Comprador buscarCompradorPorCPF(const string &cpfBusca);
 };
 
 #endif
+
 
 
 

@@ -15,7 +15,7 @@ string Comprador::toString() const {
     return nome + ";" + cpf + ";" + email + ";" + endereco.toString();
 }
 
-// NOVO: método para salvar formatado
+// NOVO: para salvar formatado
 string Comprador::toStringFormatado() const {
     stringstream ss;
     ss << "Comprador:\n";
@@ -40,6 +40,12 @@ string Comprador::getCpf() const {
     return cpf;
 }
 
+string Comprador::getNome() {
+    return nome;
+}
+string Comprador::getEndereco() {
+    return endereco.toString();
+}
 void Comprador::exibir() const {
     cout << "Nome: " << nome << "\nCPF: " << cpf << "\nEmail: " << email << endl;
     endereco.exibir();
@@ -154,8 +160,6 @@ bool Comprador::excluirComprador(const string& cpfBusca) {
     return encontrado;
 }
 
-
-
 void Comprador::inserirCompradorInterface() {
     string nome, cpf, email;
     Endereco endereco;
@@ -215,7 +219,7 @@ void Comprador::consultarCompradorInterface() {
         } else if (linha.find("Email: ") == 0) {
             email = linha.substr(7);
         } else if (linha.find("Rua: ") == 0) {
-            rua = linha.substr(6);
+            rua = linha.substr(5);
         } else if (linha.find("Bairro: ") == 0) {
             bairro = linha.substr(8);
         } else if (linha.find("Cidade: ") == 0) {
@@ -306,5 +310,37 @@ void Comprador::excluirCompradorInterface() {
         cout << "Operacao cancelada." << endl;
     }
 }
+
+Comprador Comprador::buscarCompradorPorCPF(const string& cpfBusca) {
+    ifstream arquivo("../data/compradores.txt");
+    if (!arquivo.is_open()) {
+        cout << "Erro ao abrir arquivo para leitura!" << endl;
+        return Comprador();
+    }
+
+    string linha;
+    string nome, cpf, email, rua, bairro, cidade, estado, cep;
+
+    while (getline(arquivo, linha)) {
+        if (linha.find("Comprador:") == 0) {
+            nome = cpf = email = rua = bairro = cidade = estado = cep = "";
+        } else if (linha.find("Nome: ")   == 0) nome   = linha.substr(6);
+        else if (linha.find("CPF: ")      == 0) cpf    = linha.substr(5);
+        else if (linha.find("Email: ")    == 0) email  = linha.substr(7);
+        else if (linha.find("Rua: ")      == 0) rua    = linha.substr(5);
+        else if (linha.find("Bairro: ")   == 0) bairro = linha.substr(8);
+        else if (linha.find("Cidade: ")   == 0) cidade = linha.substr(8);
+        else if (linha.find("Estado: ")   == 0) estado = linha.substr(8);
+        else if (linha.find("CEP: ")      == 0) cep    = linha.substr(5);
+        else if (linha == "---") {
+            if (cpf == cpfBusca) {
+                Endereco e{rua, bairro, cidade, estado, cep};
+                return Comprador(nome, cpf, email, e);
+            }
+        }
+    }
+    return Comprador();
+}
+
 
 
