@@ -8,8 +8,9 @@
 #include <iomanip>
 #include <cmath>
 using namespace std;
+// -------------------------------------- Construtor ----------------------------------------
 Vendas::Vendas(){}
-
+// -------------------------------------- Uteis -----------------------------------------------
 int Vendas::criar_codigoVenda() {
     static bool inicializado = false;
     if (!inicializado) {
@@ -22,7 +23,15 @@ int Vendas::criar_codigoVenda() {
     } while (verificar_codigo(codigo));
     return codigo;
 }
-
+float Vendas::calcular_frete(float valorT) {
+    if (valorT<=100.00) {
+        return 30.00;
+    }
+    if (valorT>100.00 && valorT<=300.00) {
+        return 20.00;
+    }
+    return 0.00;
+}
 bool Vendas::verificar_codigo(int codigo) {
     ifstream arquivo("../data/vendas.txt");
     string linha;
@@ -33,34 +42,7 @@ bool Vendas::verificar_codigo(int codigo) {
     }
     return false;
 }
-Vendas Vendas::inicializar_com_codigo(int codigoV) {
-    return Vendas();
-}
-// void Vendas::aicionar_item(int codigoItem,int quant) {
-//     Produtos item = Produtos::buscar_codigo_produto(codigoItem);
-//     ItemVenda produtoSolicitado;
-//     if (verificar_estoque(codigoItem,quant)) {
-//         produtoSolicitado.quantidadeVendida = quant;
-//         produtoSolicitado.precoTotal = item.preco * quant;
-//         produtoSolicitado.codigoProduto = codigoItem;
-//         produtoSolicitado.nomeProduto = item.nome;
-//         produtoSolicitado.precoUnitario = item.preco;
-//     } else {
-//         cout << "O produto: "<<item.nome<<". Esta esgotado"<<endl;
-//     }
-// }
-bool Vendas::verificar_estoque() {
-    return true;
-}
-float Vendas::calcular_frete(float valorT) {
-    if (valorT<=100.00) {
-        return 30.00;
-    }
-    if (valorT>100.00 && valorT<=300.00) {
-        return 20.00;
-    }
-    return 0.00;
-}
+// ------------------------------------------ CRUD--------------------------------------------
 void Vendas::consultar_venda(int codigoV) {
     ifstream arquivo("../data/vendas.txt");
     string linha;
@@ -440,7 +422,73 @@ void Vendas::imprimir_no_documento(int codigoV,int codigoVR, string nome, float 
     arquivo << "Frete: " << calcular_frete(valorT)<<"\n";
     arquivo << "Valor Total: " << valorT+calcular_frete(valorT)<<"\n";
     arquivo << "---\n";
-    // talvez colocar função que seta a comissão do vendedor automaticamente.
+    Vendedores vendedores;
+    vendedores.adicionarComissaoPorNumero(codigoVR,valorT);
+    arquivo.close();
+    cout << "Venda registrada com sucesso! Codigo gerado: "<< codigoV<< endl;
+}
+//------------------------------------ Nota Fiscal ------------------------------
+void Vendas::imprimir_nota_fiscal(Comprador compradorAtual,ItemVenda carrinho[],int contadorDeProdutos, float valorCompra) {
+    string nomeArquivo = "NotaFiscal"+compradorAtual.getCpf()+".txt";
+    ofstream arquivo(nomeArquivo);
+    int codigoVendaAtual = criar_codigoVenda();
+    if (!arquivo.is_open()) {
+        cerr << "Erro ao criar a nota fiscal"<<endl;
+        return;
+    }
+
+    arquivo << "==========================================="<< endl;
+    arquivo << "              NOTA FISCAL" << endl;
+    arquivo << "==========================================="<< endl;
+    arquivo << "\n";
+    arquivo << "Codigo da Venda: " << codigoVendaAtual << endl;
+    arquivo << "\n";
+    arquivo << "Comprador(a):"<<endl;
+    arquivo << "Nome: " << compradorAtual.getNome() << endl;
+    arquivo << "CPF: " << compradorAtual.getCpf() << endl;
+    arquivo << "Endereco: " << compradorAtual.getEndereco() << endl;
+    arquivo << "\n";
+    arquivo << "-------------------------------------------" << endl;
+    arquivo << "Itens da Venda:" << endl;
+    arquivo << "-------------------------------------------" << endl;
+    arquivo << "Código | Nome do Produto              | Qtde | Unitário (R$) | Total (R$)" << endl;
+    arquivo << "-------|------------------------------|------|---------------|-----------" << endl;
+    for (int i = 0; i<contadorDeProdutos; i++) {
+        arquivo << setw(6) << carrinho[i].codigoProduto << " | "
+            << setw(20) << left << carrinho[i].nomeProduto << " | "
+            << setw(4) << carrinho[i].quantidadeVendida << " | "
+            << setw(14) << fixed << setprecision(2) << carrinho[i].precoUnitario << " | "
+            << setw(10) << carrinho[i].precoTotal << "\n";
+    }
+    arquivo << "-------------------------------------------"<<endl;
+    arquivo << "Frete: R$ " << calcular_frete(valorCompra) << endl;
+    arquivo << "Total da Compra: R$ " << calcular_frete(valorCompra)+valorCompra << endl;
+    arquivo << "===========================================" << endl;
+    salvar_venda_usuario(codigoVendaAtual,compradorAtual.getNome(),carrinho,contadorDeProdutos,valorCompra);
+    delete[] carrinho;
+    arquivo.close();
+    cout << "Nota fiscal gerada com sucesso: " << nomeArquivo << endl;
+}
+void Vendas::salvar_venda_usuario(int codigoV, string nomeUsuario,ItemVenda carrinho[], int contadorDeProdutos, float valorCompra) {
+    ofstream arquivo("../data/vendas.txt", ios::app);
+    if (!arquivo.is_open()) {
+        cerr << "Erro ao abrir o arquivo" << endl;
+        return;
+    }
+    arquivo << "Venda:\n";
+    arquivo << "Codigo: " << codigoV << "\n";
+    arquivo << "Comprador: " << nomeUsuario << "\n";
+    arquivo << "Itens:\n";
+    for (int i = 0;i<contadorDeProdutos; i++) {
+        arquivo << " - Codigo: " << carrinho[i].codigoProduto
+               << " | Nome: " << carrinho[i].nomeProduto
+               << " | Qtd: " << carrinho[i].quantidadeVendida
+               << " | Unitario: " << fixed << setprecision(2) << carrinho[i].precoUnitario
+               << " | Total: " << carrinho[i].precoTotal << "\n";
+    }
+    arquivo << "Frete: " << calcular_frete(valorCompra)<<"\n";
+    arquivo << "Valor Total: " << valorCompra+calcular_frete(valorCompra)<<"\n";
+    arquivo << "---\n";
     arquivo.close();
     cout << "Venda registrada com sucesso! Codigo gerado: "<< codigoV<< endl;
 }

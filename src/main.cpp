@@ -38,30 +38,53 @@ void submenu_produtos(Produtos& produtos) {
     } while(opcao != 0);
 }
 
-void submenu_vendedores() {
-    int opcao;
+void submenu_vendedores(Vendedores vendedores) {
+    int opcao, numero;
+    float valor;
+
     do {
-        cout << "\n--- Gerenciar Vendedores ---" << endl;
+        cout << "\n=== GERENCIAMENTO DE VENDEDORES ===" << endl;
         cout << "1. Cadastrar Vendedor" << endl;
         cout << "2. Consultar Vendedor" << endl;
         cout << "3. Alterar Vendedor" << endl;
         cout << "4. Excluir Vendedor" << endl;
+        cout << "5. Adicionar Comissao" << endl;
+        cout << "6. Listar Todos Vendedores" << endl;
         cout << "0. Voltar" << endl;
-        cout << "Escolha uma opcao: ";
+        cout << "Opcao: ";
         cin >> opcao;
-        cin.ignore();
+
         switch(opcao) {
             case 1:
-                cout << "Cadastrar Vendedor (implementar)" << endl;
+                vendedores.setNumero();
+                vendedores.setNome();
+                vendedores.setSalarioFixo();
+                vendedores.salvarNoArquivo();
                 break;
             case 2:
-                cout << "Consultar Vendedor (implementar)" << endl;
+                cout << "Numero do vendedor: ";
+                cin >> numero;
+                vendedores.consultarVendedor(numero);
                 break;
             case 3:
-                cout << "Alterar Vendedor (implementar)" << endl;
+                cout << "Numero do vendedor: ";
+                cin >> numero;
+                vendedores.alterarVendedor(numero);
                 break;
             case 4:
-                cout << "Excluir Vendedor (implementar)" << endl;
+                cout << "Numero do vendedor: ";
+                cin >> numero;
+                vendedores.excluirVendedor(numero);
+                break;
+            case 5:
+                cout << "Numero do vendedor: ";
+                cin >> numero;
+                cout << "Valor da venda: R$ ";
+                cin >> valor;
+                vendedores.adicionarComissaoPorNumero(numero,valor);
+                break;
+            case 6:
+                vendedores.listarTodosVendedores();
                 break;
             case 0:
                 break;
@@ -142,59 +165,78 @@ void submenu_vendas(Vendas venda) {
         }
     } while(opcao != 0);
 }
-void submenu_realizar_venda(Vendas venda) {
-    int codigoProduto,codigoVendedor,cpfComprador,quantidadeProduto;
-    bool usuario = false, vendedor = false;
-    char notaFiscal;
+void submenu_realizar_venda(Vendas venda,Vendedores vendedores, Produtos& produto, Comprador compradorAtual) {
+    string cpfComprador, nomeComprador;
+    bool usuarioValido = false;
     do {
-        cout << "Informe seu CPF:" << endl;
+        cout << "Informe seu CPF: ";
         cin >> cpfComprador;
-        // if (validar_cpf(cpfComprador)) {
-        //     usuario = true;
-        //     //chamar função da classe vendas
-        // } else {
-        //     cout << "Insira um cpf valido e cadastrado." << endl;
-        // }
-        usuario = true; // Temporário para teste
+        compradorAtual = Comprador::buscarCompradorPorCPF(cpfComprador);
+        if (!compradorAtual.getCpf().empty()) {
+            usuarioValido = true;
+        } else {
+            cout << "CPF não encontrado. Insira um cpf cadastrado ou cadastre um novo usuário.\n";
+        }
+        cin.ignore();
         system("cls");
-    } while (!usuario);
-    do {
-        //imprimir todos os produtos disponíveis
+    } while (!usuarioValido);
+    //-------------------------------------------------------------------------------------
+    int maxItens = 100;
+    ItemVenda *carrinhoCompra = new ItemVenda[maxItens];
+    int  codigoProduto = 1;
+    int  quantidadeProd;
+    int  contadorDeProdutos = 0;
+    float valorTotal = 0.00f;
+     while (codigoProduto!=0 && contadorDeProdutos<maxItens){
+        produto.listar_produtos();
         cout <<"Insira codigo do produto desejado (caso deseje finalizar a compra insira 0):"<<endl;
         cin >> codigoProduto;
-        // if (validar_produto(codigoProduto)) {
-        //     cout <<"Insira quantas unidades desejadas:"<<endl;
-        //     cin >> quantidadeProduto;
-        //     // inicializar vetor de itens na classe vendas
-        // } else {
-        //     cout << "Insira um codigo valido" << endl;
-        // }
-        if (codigoProduto != 0) {
-            cout <<"Insira quantas unidades desejadas:"<<endl;
-            cin >> quantidadeProduto;
+         if (codigoProduto==0) break;
+
+        Produto prod = produto.consultar_produto(codigoProduto);
+        if (!prod.encontrado) {
+            cout << "Código inválido!\n";
+            continue;
         }
-        system("cls");
-    } while (codigoProduto!=0);
+
+         cout << "Quantidade Desejada";
+         cin >> quantidadeProd;
+
+         ItemVenda item;
+         item.codigoProduto     = prod.codigo;
+         item.nomeProduto       = prod.nome;
+         item.quantidadeVendida = quantidadeProd;
+         item.precoUnitario     = prod.precoVenda;
+         item.precoTotal        = quantidadeProd * prod.precoVenda;
+         carrinhoCompra[contadorDeProdutos] = item;
+         system("cls");
+         contadorDeProdutos++;
+         valorTotal += item.precoTotal;
+    }
+    // ---------------------------------------------------------
+    bool vendedorValido = false;
+    int codigoVendedor;
     do {
-        // imprimir todos os vendedores (direto pelo arquivo)
+        vendedores.listarTodosVendedores();
         cout << "Insira o codigo do vendedor que te atendeu" << endl;
         cin >> codigoVendedor;
-        // if (validar_vendedor(codigoVendedor)) {
-        //     vendedor = true;
-        // } else {
-        //     cout << "Insira um codigo valido" << endl;
-        // }
-        vendedor = true; // Temporário para teste
-    } while (!vendedor);
-
-    // função inicializar objeto venda com todos os parametros gerados
-
+        if (vendedores.verificarNumero(codigoVendedor)) {
+            vendedorValido = true;
+            vendedores.adicionarComissaoPorNumero(codigoVendedor,valorTotal);
+        } else {
+            cout << "Insira um codigo valido" << endl;
+        }
+    } while (!vendedorValido);
+//----------------------------------------------------------------------
+    char notaFiscal;
     cout<<"Deseja gerar nota fiscal? (digite s (sim) ou n (nao))"<<endl;
     cin >> notaFiscal;
     if (notaFiscal=='s' || notaFiscal=='S') {
-        // gerar arquivo de nota fiscal
+        venda.imprimir_nota_fiscal(compradorAtual,carrinhoCompra,contadorDeProdutos,valorTotal);
         cout << "Obrigado pela compra!" << endl;
     } else if (notaFiscal=='n' || notaFiscal=='N') {
+        int codigo = venda.criar_codigoVenda();
+
         cout << "Obrigado pela compra!" << endl;
     }
 }
@@ -202,7 +244,9 @@ int main() {
     cout << "=== PROGRAMA INICIADO - VERSAO ATUALIZADA ===" << endl;
     Vendas venda;
     Produtos produtos;
-    
+    Vendedores vendedores;
+    Comprador comprador;
+
     int opcao;
     do {
         cout << "\n===== MENU PRINCIPAL =====" << endl;
@@ -220,7 +264,7 @@ int main() {
                 submenu_produtos(produtos);
                 break;
             case 2:
-                submenu_vendedores();
+                submenu_vendedores(vendedores);
                 break;
             case 3:
                 submenu_compradores();
@@ -229,7 +273,7 @@ int main() {
                 submenu_vendas(venda);
                 break;
             case 5:
-                submenu_realizar_venda(venda);
+                submenu_realizar_venda(venda,vendedores,produtos,comprador);
                 break;
             case 0:
                 cout << "Saindo..." << endl;

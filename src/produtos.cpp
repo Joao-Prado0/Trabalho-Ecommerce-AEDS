@@ -32,11 +32,13 @@ bool Produtos::inserir_produto(const string& nome, int codigo, int quantidade, f
     return true;
 }
 
-Produto* Produtos::consultar_produto(int codigo) {
-    for (auto& p : lista_produtos) {
-        if (p.codigo == codigo) return &p;
+Produto Produtos::consultar_produto(int codigo) {
+    for (const auto& p : lista_produtos) {
+        if (p.codigo == codigo) return p;
     }
-    return nullptr;
+    Produto naoEncontrado;
+    naoEncontrado.encontrado = false;
+    return naoEncontrado;
 }
 
 bool Produtos::alterar_produto(int codigo, const string* novo_nome, int nova_quantidade, float novo_preco) {
@@ -80,7 +82,7 @@ void Produtos::listar_produtos() {
 }
 
 void Produtos::salvar_produtos() {
-    ofstream arquivo("data/estoque.txt");
+    ofstream arquivo("../data/estoque.txt");
     if (!arquivo.is_open()) {
         cout << "Erro ao abrir arquivo para escrita!" << endl;
         return;
@@ -100,7 +102,7 @@ void Produtos::salvar_produtos() {
 
 void Produtos::carregar_produtos() {
     lista_produtos.clear();
-    ifstream arquivo("data/estoque.txt");
+    ifstream arquivo("../data/estoque.txt");
     if (!arquivo.is_open()) {
         cout << "ERRO: Nao foi possivel abrir o arquivo data/estoque.txt" << endl;
         return;
@@ -167,11 +169,13 @@ void Produtos::inserir_produto_manualmente() {
             cout << "Digite o codigo do produto: ";
             cin >> novoProduto.codigo;
             cin.ignore();
-
-            if (consultar_produto(novoProduto.codigo) != nullptr) {
+            Produto p = consultar_produto(novoProduto.codigo);
+            if (p.encontrado) {
                 cout << "Erro: Ja existe um produto com este codigo!" << endl;
+            } else {
+                break;
             }
-        } while (consultar_produto(novoProduto.codigo) != nullptr);
+        } while (true);
     } else {
         cout << "Opcao invalida!" << endl;
         return;
@@ -220,14 +224,10 @@ void Produtos::consultar_produto_interface() {
         cin >> codigo;
         cin.ignore();
 
-        Produto* produto = consultar_produto(codigo);
-        if (produto != nullptr) {
+        Produto produto = consultar_produto(codigo);
+        if (produto.encontrado) {
             cout << "\n=== Dados do Produto ===" << endl;
-            cout << "Codigo: " << produto->codigo << endl;
-            cout << "Nome: " << produto->nome << endl;
-            cout << "Quantidade em Estoque: " << produto->quantidadeEstoque << endl;
-            cout << "Preco de Venda: R$ " << fixed << setprecision(2) << produto->precoVenda << endl;
-            cout << "=========================" << endl;
+            cout << "Codigo: " << produto.codigo << endl;
         } else {
             cout << "Produto nao encontrado!" << endl;
         }
@@ -240,24 +240,23 @@ void Produtos::consultar_produto_interface() {
 
 void Produtos::alterar_produto_interface() {
     int codigo;
-
     cout << "\n=== ALTERAR PRODUTO ===" << endl;
     cout << "Digite o codigo do produto: ";
     cin >> codigo;
     cin.ignore();
 
-    Produto* produto = consultar_produto(codigo);
-    if (produto == nullptr) {
+    Produto produto = consultar_produto(codigo);
+    if (!produto.encontrado) { // Check encontrado flag
         cout << "Produto nao encontrado!" << endl;
         return;
     }
 
     cout << "\nProduto encontrado:" << endl;
     cout << "\n=== Dados do Produto ===" << endl;
-    cout << "Codigo: " << produto->codigo << endl;
-    cout << "Nome: " << produto->nome << endl;
-    cout << "Quantidade em Estoque: " << produto->quantidadeEstoque << endl;
-    cout << "Preco de Venda: R$ " << fixed << setprecision(2) << produto->precoVenda << endl;
+    cout << "Codigo: " << produto.codigo << endl;
+    cout << "Nome: " << produto.nome << endl;
+    cout << "Quantidade em Estoque: " << produto.quantidadeEstoque << endl;
+    cout << "Preco de Venda: R$ " << fixed << setprecision(2) << produto.precoVenda << endl;
     cout << "=========================" << endl;
 
     string novo_nome;
@@ -323,24 +322,23 @@ void Produtos::alterar_produto_interface() {
 
 void Produtos::excluir_produto_interface() {
     int codigo;
-
     cout << "\n=== EXCLUIR PRODUTO ===" << endl;
     cout << "Digite o codigo do produto: ";
     cin >> codigo;
     cin.ignore();
 
-    Produto* produto = consultar_produto(codigo);
-    if (produto == nullptr) {
+    Produto produto = consultar_produto(codigo);
+    if (!produto.encontrado) {
         cout << "Produto nao encontrado!" << endl;
         return;
     }
 
     cout << "\nProduto encontrado:" << endl;
     cout << "\n=== Dados do Produto ===" << endl;
-    cout << "Codigo: " << produto->codigo << endl;
-    cout << "Nome: " << produto->nome << endl;
-    cout << "Quantidade em Estoque: " << produto->quantidadeEstoque << endl;
-    cout << "Preco de Venda: R$ " << fixed << setprecision(2) << produto->precoVenda << endl;
+    cout << "Codigo: " << produto.codigo << endl;
+    cout << "Nome: " << produto.nome << endl;
+    cout << "Quantidade em Estoque: " << produto.quantidadeEstoque << endl;
+    cout << "Preco de Venda: R$ " << fixed << setprecision(2) << produto.precoVenda << endl;
     cout << "=========================" << endl;
 
     char confirmacao;

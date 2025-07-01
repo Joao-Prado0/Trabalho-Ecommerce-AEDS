@@ -1,7 +1,8 @@
 #ifndef VENDAS_H
 #define VENDAS_H
 #include <string>
-#include <vector>
+#include "compradores.h"
+
 using namespace std;
 
 struct ItemVenda{
@@ -28,15 +29,11 @@ class Vendas {
 
         void imprimir_no_documento(int codigoV, int codigoVR, string nome, float valorT, ItemVenda *itens, int quant);
 
-        Vendas(int codigoP);
-
         int criar_codigoVenda();
 
         bool verificar_codigo(int codigo);
 
         Vendas inicializar_com_codigo(int codigoV);
-
-        void aicionar_item(int codigoItem, int quant);
 
         void consultar_venda(int codigoV);
 
@@ -48,9 +45,11 @@ class Vendas {
 
         void inserir_venda_manualmente();
 
-        bool verificar_estoque();
-
         float calcular_frete(float valorT);
+
+        void imprimir_nota_fiscal(Comprador compradorAtual,ItemVenda carrinho[],int contadorDeProdutos, float ValorTotal);
+
+        void salvar_venda_usuario(int codigoVenda, string nomeComprador,ItemVenda carrinho[], int contadorDeProdutos, float ValorCompra);
 };
 
 #endif

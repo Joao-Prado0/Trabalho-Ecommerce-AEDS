@@ -343,4 +343,3 @@ Comprador Comprador::buscarCompradorPorCPF(const string& cpfBusca) {
 }
 
 
-

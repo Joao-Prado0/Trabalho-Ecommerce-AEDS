@@ -1,6 +1,4 @@
-#ifndef VENDEDORES_H
-#define VENDEDORES_H
-
+#include "vendedores.h"
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -9,319 +7,368 @@
 #include <string>
 using namespace std;
 
-class Vendedores {
-private:
-    int numero;
-    string nome;
-    float salario;
-    int comissao;
+Vendedores::Vendedores() {
+    numero = 0;
+    nome = "";
+    salarioTotal = 0.0;
+    comissaoAcumulada = 0;
+}
 
-public:
-    Vendedores() {
-        numero = 0;
-        nome = "";
-        salario = 0.0;
-        comissao = 0;
+void Vendedores::calcularSalarioTotal() {
+    salarioTotal = salarioFixo + comissaoAcumulada;
+}
+
+void Vendedores::setNumero() {
+    static bool seeded = false;
+    if (!seeded) {
+        srand(time(nullptr));
+        seeded = true;
     }
 
-    void setNumero() {
-        static bool inicializado = false;
-        if (!inicializado) {
-            srand(time(nullptr));
-            inicializado = true;
+    int novoNumero;
+    do {
+        novoNumero = rand() % 900 + 100;
+    } while (verificarNumero(novoNumero));
+
+    numero = novoNumero;
+    cout << "Numero gerado: " << numero << endl;
+}
+
+void Vendedores::setNome() {
+    cout << "Nome: ";
+    cin.ignore();
+    getline(cin, nome);
+}
+
+void Vendedores::setSalarioFixo() {
+    cout << "Salario fixo: R$ ";
+    cin >> salarioFixo;
+    calcularSalarioTotal();
+}
+
+bool Vendedores::verificarNumero(int num) {
+    ifstream arquivo("../data/vendedores.txt");
+    if (!arquivo) return false;
+
+    string linha;
+    while (getline(arquivo, linha)) {
+        if (linha.find("Numero: " + to_string(num)) != string::npos) {
+            return true;
         }
+    }
+    return false;
+}
 
-        int numGerado;
-        do {
-            numGerado = (rand() % 900) + 100;
-        } while (verificarNumero(numGerado));
-
-        numero = numGerado;
-        cout << "Número do vendedor gerado: " << numero << endl;
+void Vendedores::salvarNoArquivo() {
+    ofstream arquivo("../data/vendedores.txt", ios::app);
+    if (!arquivo) {
+        cerr << "Erro ao abrir arquivo!" << endl;
+        return;
     }
 
-    void setNome() {
-        cout << "Nome do vendedor: ";
-        cin.ignore();
-        getline(cin, nome);
-    }
+    arquivo << "Vendedor\n"
+            << "Numero: " << numero << "\n"
+            << "Nome: " << nome << "\n"
+            << fixed << setprecision(2)
+            << "Salario fixo: " << salarioFixo << "\n"
+            << "Comissao acumulada: " << comissaoAcumulada << "\n"
+            << "Salario total (fixo + comissao): " << salarioTotal << "\n"
+            << "------------------------------\n";
 
-    void setSalario() {
-        cout << "Salário fixo: ";
-        cin >> salario;
-    }
+    cout << "Vendedor cadastrado com sucesso!" << endl;
+}
 
-    void setComissao() {
-        comissao = 0;
-    }
+void Vendedores::atualizarArquivo() {
+    ifstream entrada("../data/vendedores.txt");
+    ofstream temp("../data/temp.txt");
 
-    bool verificarNumero(int num) {
-        ifstream arquivo("../data/vendedores.txt");
-        if (!arquivo.is_open()) return false;
+    string linha;
+    bool encontrado = false;
 
-        string linha;
-        while (getline(arquivo, linha)) {
-            if (linha.find("Número: " + to_string(num)) != string::npos)
-                return true;
-        }
-        return false;
-    }
+    while (getline(entrada, linha)) {
+        if (linha == "Vendedor") {
+            string bloco[6];
+            bloco[0] = linha;
+            for (int i = 1; i < 6; ++i) {
+                getline(entrada, bloco[i]);
+            }
 
-    void salvarNoArquivo() {
-        ofstream arquivo("../data/vendedores.txt", ios::app);
-        if (!arquivo.is_open()) {
-            cout << "Erro ao abrir o arquivo para salvar vendedor." << endl;
-            return;
-        }
-
-        arquivo << "Vendedor" << endl;
-        arquivo << "Número: " << numero << endl;
-        arquivo << "Nome: " << nome << endl;
-        arquivo << fixed << setprecision(2);
-        arquivo << "Salário: " << salario << endl;
-        arquivo << "Comissão: " << comissao << endl;
-        arquivo << "------------------------------" << endl;
-
-        cout << "Vendedor salvo com sucesso!" << endl;
-    }
-
-    void adicionarComissao(float valorVenda) {
-        float valorComissao = valorVenda * 0.03;
-        salario += valorComissao;
-        cout << "Comissão de R$ " << valorComissao << " adicionada ao salário." << endl;
-        cout << "Novo salário: R$ " << salario << endl;
-        atualizarSalarioNoArquivo();
-    }
-
-    void atualizarSalarioNoArquivo() {
-        ifstream arquivoIn("../data/vendedores.txt");
-        ofstream arquivoOut("../data/temp.txt");
-
-        if (!arquivoIn.is_open() || !arquivoOut.is_open()) {
-            cout << "Erro ao abrir os arquivos para atualização." << endl;
-            return;
-        }
-
-        string linha;
-        bool achou = false;
-
-        while (getline(arquivoIn, linha)) {
-            if (linha == "Vendedor") {
-                arquivoOut << linha << endl;
-                getline(arquivoIn, linha);
-                int num = stoi(linha.substr(8));
-                arquivoOut << linha << endl;
-
-                getline(arquivoIn, linha);
-                arquivoOut << linha << endl;
-
-                getline(arquivoIn, linha);
-                if (num == numero) {
-                    achou = true;
-                    arquivoOut << "Salário: " << fixed << setprecision(2) << salario << endl;
-                } else {
-                    arquivoOut << linha << endl;
-                }
-
-                getline(arquivoIn, linha);
-                arquivoOut << linha << endl;
-
-                getline(arquivoIn, linha);
-                arquivoOut << linha << endl;
+            int num = stoi(bloco[1].substr(8));
+            if (num == numero) {
+                encontrado = true;
+                temp << "Vendedor\n"
+                     << "Numero: " << numero << "\n"
+                     << "Nome: " << nome << "\n"
+                     << fixed << setprecision(2)
+                     << "Salario fixo: " << salarioFixo << "\n"
+                     << "Comissao acumulada: " << comissaoAcumulada << "\n"
+                     << "Salario total (fixo + comissao): " << salarioTotal << "\n";
             } else {
-                arquivoOut << linha << endl;
-            }
-        }
-
-        arquivoIn.close();
-        arquivoOut.close();
-
-        remove("../data/vendedores.txt");
-        rename("../data/temp.txt", "../data/vendedores.txt");
-
-        if (achou)
-            cout << "Salário atualizado com sucesso no arquivo!" << endl;
-        else
-            cout << "Vendedor não encontrado para atualização." << endl;
-    }
-
-    void consultarVendedor(int numConsulta) {
-        ifstream arquivo("../data/vendedores.txt");
-        if (!arquivo.is_open()) {
-            cout << "Erro ao abrir o arquivo para leitura." << endl;
-            return;
-        }
-
-        string linha;
-        bool achou = false;
-
-        while (getline(arquivo, linha)) {
-            if (linha == "Vendedor") {
-                string bloco[5];
-                bloco[0] = linha;
-                for (int i = 1; i < 5; i++) {
-                    getline(arquivo, bloco[i]);
-                }
-
-                int numeroArquivo = stoi(bloco[1].substr(8));
-                if (numeroArquivo == numConsulta) {
-                    achou = true;
-                    cout << "\n--- Vendedor Encontrado ---" << endl;
-                    for (int i = 0; i < 5; i++) {
-                        cout << bloco[i] << endl;
-                    }
-                    break;
+                for (const auto& l : bloco) {
+                    temp << l << "\n";
                 }
             }
+            getline(entrada, linha);
+            temp << "------------------------------\n";
         }
-
-        if (!achou) {
-            cout << "\nNenhum vendedor com número " << numConsulta << " foi encontrado." << endl;
-        }
-
-        arquivo.close();
     }
 
-    void alterarVendedor(int numeroAlvo) {
-        ifstream arquivoIn("../data/vendedores.txt");
-        ofstream arquivoOut("../data/temp.txt");
+    entrada.close();
+    temp.close();
 
-        if (!arquivoIn.is_open() || !arquivoOut.is_open()) {
-            cout << "Erro ao abrir os arquivos para alteração." << endl;
-            return;
+    remove("../data/vendedores.txt");
+    rename("../data/temp.txt", "../data/vendedores.txt");
+}
+
+void Vendedores::adicionarComissaoPorNumero(int numeroVendedor, float valorVenda) {
+    ifstream entrada("../data/vendedores.txt");
+    ofstream temp("../data/temp.txt");
+
+    string linha;
+    bool encontrado = false;
+    float comissao = valorVenda * 0.03f;
+    float comissaoAtual = 0.0f;
+    float salarioFixo = 0.0f;
+    string nomeVendedor;
+
+    while (getline(entrada, linha)) {
+        if (linha == "Vendedor") {
+            string bloco[6];
+            bloco[0] = linha;
+            for (int i = 1; i < 6; ++i) {
+                getline(entrada, bloco[i]);
+            }
+
+            int num = stoi(bloco[1].substr(8));
+            if (num == numeroVendedor) {
+                encontrado = true;
+                nomeVendedor = bloco[2].substr(6);
+                salarioFixo = stof(bloco[3].substr(13));
+                comissaoAtual = stof(bloco[4].substr(19));
+                float novaComissao = comissaoAtual + comissao;
+                float salarioTotal = salarioFixo + novaComissao;
+
+                temp << "Vendedor\n"
+                     << "Numero: " << numeroVendedor << "\n"
+                     << "Nome: " << nomeVendedor << "\n"
+                     << fixed << setprecision(2)
+                     << "Salario fixo: " << salarioFixo << "\n"
+                     << "Comissao acumulada: " << novaComissao << "\n"
+                     << "Salario total (fixo + comissao): " << salarioTotal << "\n";
+            } else {
+                for (const auto& l : bloco) {
+                    temp << l << "\n";
+                }
+            }
+            getline(entrada, linha);
+            temp << "------------------------------\n";
         }
+    }
 
-        string linha;
-        bool achou = false;
+    entrada.close();
+    temp.close();
 
-        while (getline(arquivoIn, linha)) {
-            if (linha == "Vendedor") {
-                string bloco[5];
-                bloco[0] = linha;
-                for (int i = 1; i < 5; i++) {
-                    getline(arquivoIn, bloco[i]);
+    remove("../data/vendedores.txt");
+    rename("../data/temp.txt", "../data/vendedores.txt");
+
+}
+void Vendedores::adicionarComissao(float valorVenda) {
+    adicionarComissaoPorNumero(this->numero, valorVenda);
+}
+
+void Vendedores::consultarVendedor(int numConsulta) {
+    ifstream arquivo("../data/vendedores.txt");
+    if (!arquivo) {
+        cerr << "Erro ao abrir arquivo!" << endl;
+        return;
+    }
+
+    string linha;
+    bool encontrado = false;
+
+    while (getline(arquivo, linha)) {
+        if (linha == "Vendedor") {
+            string bloco[6];
+            bloco[0] = linha;
+            for (int i = 1; i < 6; ++i) {
+                getline(arquivo, bloco[i]);
+            }
+
+            int num = stoi(bloco[1].substr(8));
+            if (num == numConsulta) {
+                encontrado = true;
+                cout << "\n=== DADOS DO VENDEDOR ===\n";
+                for (const auto& l : bloco) {
+                    cout << l << "\n";
+                }
+                break;
+            }
+            getline(arquivo, linha);
+        }
+    }
+
+    if (!encontrado) {
+        cout << "Vendedor nao encontrado!" << endl;
+    }
+}
+
+void Vendedores::alterarVendedor(int numeroAlvo) {
+    ifstream entrada("../data/vendedores.txt");
+    ofstream temp("../data/temp.txt");
+
+    string linha;
+    bool encontrado = false;
+    string novoNome;
+    float novoSalario;
+
+    while (getline(entrada, linha)) {
+        if (linha == "Vendedor") {
+            string bloco[6];
+            bloco[0] = linha;
+            for (int i = 1; i < 6; ++i) {
+                getline(entrada, bloco[i]);
+            }
+
+            int num = stoi(bloco[1].substr(8));
+            if (num == numeroAlvo) {
+                encontrado = true;
+                cout << "\n=== ALTERAR VENDEDOR ===\n";
+                cout << "Nome atual: " << bloco[2].substr(6) << "\n";
+                cout << "Novo nome (ou enter para manter): ";
+                cin.ignore();
+                getline(cin, novoNome);
+                if (novoNome.empty()) {
+                    novoNome = bloco[2].substr(6);
                 }
 
-                int numeroArquivo = stoi(bloco[1].substr(8));
-                string nomeAntigo = bloco[2].substr(6);
-                float salarioAntigo = stof(bloco[3].substr(9));
+                cout << "Salario atual: " << bloco[3].substr(13) << "\n";
+                cout << "Novo salario (ou 0 para manter): ";
+                string input;
+                getline(cin, input);
+                novoSalario = input.empty() ? stof(bloco[3].substr(13)) : stof(input);
 
-                if (numeroArquivo == numeroAlvo) {
-                    achou = true;
+                temp << "Vendedor\n"
+                     << "Numero: " << numeroAlvo << "\n"
+                     << "Nome: " << novoNome << "\n"
+                     << fixed << setprecision(2)
+                     << "Salario fixo: " << novoSalario << "\n"
+                     << bloco[4] << "\n"
+                     << "Salario total (fixo + comissao): "
+                     << novoSalario + stof(bloco[4].substr(19)) << "\n";
+            } else {
+                for (const auto& l : bloco) {
+                    temp << l << "\n";
+                }
+            }
+            getline(entrada, linha);
+            temp << "------------------------------\n";
+        }
+    }
 
-                    cout << "\n--- Vendedor encontrado ---" << endl;
-                    cout << "Nome atual: " << nomeAntigo << endl;
-                    cout << "Salário atual: R$ " << salarioAntigo << endl;
+    entrada.close();
+    temp.close();
 
-                    string novoNome = nomeAntigo;
-                    float novoSalario = salarioAntigo;
+    remove("../data/vendedores.txt");
+    rename("../data/temp.txt", "../data/vendedores.txt");
 
-                    char resp;
-                    cout << "Deseja alterar o nome? (s/n): ";
-                    cin >> resp;
-                    cin.ignore();
-                    if (resp == 's' || resp == 'S') {
-                        cout << "Novo nome: ";
-                        getline(cin, novoNome);
+    if (encontrado) {
+        cout << "Vendedor alterado com sucesso!\n";
+    } else {
+        cout << "Vendedor nao encontrado!\n";
+    }
+}
+
+void Vendedores::excluirVendedor(int numeroAlvo) {
+    ifstream entrada("../data/vendedores.txt");
+    ofstream temp("../data/temp.txt");
+
+    string linha;
+    bool encontrado = false;
+    char confirmacao;
+
+    while (getline(entrada, linha)) {
+        if (linha == "Vendedor") {
+            string bloco[6];
+            bloco[0] = linha;
+            for (int i = 1; i < 6; ++i) {
+                getline(entrada, bloco[i]);
+            }
+
+            int num = stoi(bloco[1].substr(8));
+            if (num == numeroAlvo) {
+                encontrado = true;
+                cout << "\n=== CONFIRMAR EXCLUSAO ===\n";
+                for (const auto& l : bloco) {
+                    cout << l << "\n";
+                }
+                cout << "Confirmar exclusao? (s/n): ";
+                cin >> confirmacao;
+                if (tolower(confirmacao) != 's') {
+                    for (const auto& l : bloco) {
+                        temp << l << "\n";
                     }
-
-                    cout << "Deseja alterar o salário? (s/n): ";
-                    cin >> resp;
-                    if (resp == 's' || resp == 'S') {
-                        cout << "Novo salário: ";
-                        cin >> novoSalario;
-                    }
-
-                    arquivoOut << "Vendedor" << endl;
-                    arquivoOut << "Número: " << numeroArquivo << endl;
-                    arquivoOut << "Nome: " << novoNome << endl;
-                    arquivoOut << fixed << setprecision(2);
-                    arquivoOut << "Salário: " << novoSalario << endl;
-                    arquivoOut << bloco[4] << endl;
-                    arquivoOut << "------------------------------" << endl;
-                } else {
-                    for (int i = 0; i < 5; i++) {
-                        arquivoOut << bloco[i] << endl;
-                    }
-                    arquivoOut << "------------------------------" << endl;
+                    temp << "------------------------------\n";
                 }
             } else {
-                arquivoOut << linha << endl;
+                for (const auto& l : bloco) {
+                    temp << l << "\n";
+                }
+                temp << "------------------------------\n";
             }
         }
-
-        arquivoIn.close();
-        arquivoOut.close();
-
-        remove("../data/vendedores.txt");
-        rename("../data/temp.txt", "../data/vendedores.txt");
-
-        if (achou)
-            cout << "\n✅ Vendedor alterado com sucesso!" << endl;
-        else
-            cout << "\n❌ Vendedor com número " << numeroAlvo << " não foi encontrado." << endl;
     }
 
-    void excluirVendedor(int numeroAlvo) {
-        ifstream arquivoIn("../data/vendedores.txt");
-        ofstream arquivoOut("../data/temp.txt");
+    entrada.close();
+    temp.close();
 
-        if (!arquivoIn.is_open() || !arquivoOut.is_open()) {
-            cout << "Erro ao abrir os arquivos para exclusão." << endl;
-            return;
-        }
+    remove("../data/vendedores.txt");
+    rename("../data/temp.txt", "../data/vendedores.txt");
 
-        string linha;
-        bool achou = false;
+    if (encontrado && tolower(confirmacao) == 's') {
+        cout << "Vendedor excluido com sucesso!\n";
+    } else if (!encontrado) {
+        cout << "Vendedor nao encontrado!\n";
+    }
+}
 
-        while (getline(arquivoIn, linha)) {
-            if (linha == "Vendedor") {
-                string bloco[6];
-                bloco[0] = linha;
-                for (int i = 1; i < 6; i++) {
-                    getline(arquivoIn, bloco[i]);
-                }
+void Vendedores::listarTodosVendedores() {
+    ifstream arquivo("../data/vendedores.txt");
+    if (!arquivo.is_open()) {
+        cout << "Nenhum vendedor cadastrado ainda!" << endl;
+        return;
+    }
 
-                int numeroArquivo = stoi(bloco[1].substr(8));
+    cout << "\n=== LISTA COMPLETA DE VENDEDORES ===" << endl;
+    cout << left << setw(10) << "CODIGO" << "NOME" << endl;
+    cout << "----------------------------------" << endl;
 
-                if (numeroArquivo == numeroAlvo) {
-                    achou = true;
-                    cout << "\n--- Vendedor encontrado ---" << endl;
-                    cout << bloco[1] << endl;
-                    cout << bloco[2] << endl;
-                    cout << bloco[3] << endl;
-                    cout << bloco[4] << endl;
+    string linha;
+    bool encontrouVendedor = false;
 
-                    char resp;
-                    cout << "Tem certeza que deseja excluir este vendedor? (s/n): ";
-                    cin >> resp;
+    while (getline(arquivo, linha)) {
+        if (linha == "Vendedor") {
+            encontrouVendedor = true;
 
-                    if (resp == 's' || resp == 'S') {
-                        cout << "✅ Vendedor excluído com sucesso!" << endl;
-                        continue;
-                    } else {
-                        cout << "❎ Exclusão cancelada. Vendedor mantido." << endl;
-                    }
-                }
+            // Ler número
+            getline(arquivo, linha);
+            string codigo = linha.substr(8);
 
-                for (int i = 0; i < 6; i++) {
-                    arquivoOut << bloco[i] << endl;
-                }
-            } else {
-                arquivoOut << linha << endl;
+            // Ler nome
+            getline(arquivo, linha);
+            string nome = linha.substr(6);
+
+            cout << left << setw(10) << codigo << nome << endl;
+
+            // Pular as linhas restantes do registro (4 linhas: salário, comissão, total, separador)
+            for (int i = 0; i < 4; i++) {
+                if (!getline(arquivo, linha)) break;
             }
         }
-
-        arquivoIn.close();
-        arquivoOut.close();
-
-        remove("../data/vendedores.txt");
-        rename("../data/temp.txt", "../data/vendedores.txt");
-
-        if (!achou) {
-            cout << "\n❌ Vendedor com número " << numeroAlvo << " não foi encontrado." << endl;
-        }
     }
-};
 
-#endif
+    arquivo.close();
+
+    if (!encontrouVendedor) {
+        cout << "Nenhum vendedor encontrado no arquivo!" << endl;
+    }
+}
