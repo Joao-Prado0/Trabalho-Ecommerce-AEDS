@@ -19,3 +19,10 @@ Salario fixo: 7987.00
 Comissao acumulada: 0.00
 Salario total (fixo + comissao): 7987.00
 ------------------------------
+Vendedor
+Numero: 273
+Nome: Daniel Rodrigues
+Salario fixo: 3500.00
+Comissao acumulada: 45.00
+Salario total (fixo + comissao): 3545.00
+------------------------------

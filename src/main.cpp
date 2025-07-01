@@ -38,8 +38,7 @@ void submenu_produtos(Produtos& produtos) {
     } while(opcao != 0);
 }
 
-void submenu_vendedores(Vendedores) {
-    static Vendedores gerenciador;
+void submenu_vendedores(Vendedores vendedores) {
     int opcao, numero;
     float valor;
 
@@ -57,35 +56,35 @@ void submenu_vendedores(Vendedores) {
 
         switch(opcao) {
             case 1:
-                gerenciador.setNumero();
-                gerenciador.setNome();
-                gerenciador.setSalarioFixo();
-                gerenciador.salvarNoArquivo();
+                vendedores.setNumero();
+                vendedores.setNome();
+                vendedores.setSalarioFixo();
+                vendedores.salvarNoArquivo();
                 break;
             case 2:
                 cout << "Numero do vendedor: ";
                 cin >> numero;
-                gerenciador.consultarVendedor(numero);
+                vendedores.consultarVendedor(numero);
                 break;
             case 3:
                 cout << "Numero do vendedor: ";
                 cin >> numero;
-                gerenciador.alterarVendedor(numero);
+                vendedores.alterarVendedor(numero);
                 break;
             case 4:
                 cout << "Numero do vendedor: ";
                 cin >> numero;
-                gerenciador.excluirVendedor(numero);
+                vendedores.excluirVendedor(numero);
                 break;
             case 5:
                 cout << "Numero do vendedor: ";
                 cin >> numero;
                 cout << "Valor da venda: R$ ";
                 cin >> valor;
-                gerenciador.adicionarComissaoPorNumero(numero,valor);
+                vendedores.adicionarComissaoPorNumero(numero,valor);
                 break;
             case 6:
-                gerenciador.listarTodosVendedores();
+                vendedores.listarTodosVendedores();
                 break;
             case 0:
                 break;
