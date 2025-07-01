@@ -34,6 +34,10 @@ public:
     void consultar_produto_interface();
     void alterar_produto_interface();
     void excluir_produto_interface();
+
+// Funções para controle de estoque em vendas
+    bool verificar_quantidade(int codigo, int quantidade_desejada);
+    bool confirmar_venda(int codigo, int quantidade_vendida);
 };
 
 #endif 
