@@ -48,6 +48,8 @@ class Vendas {
         float calcular_frete(float valorT);
 
         void imprimir_nota_fiscal(Comprador compradorAtual,ItemVenda carrinho[],int contadorDeProdutos, float ValorTotal);
+
+        void salvar_venda_usuario(int codigoVenda, string nomeComprador,ItemVenda carrinho[], int contadorDeProdutos, float ValorCompra);
 };
 
 #endif

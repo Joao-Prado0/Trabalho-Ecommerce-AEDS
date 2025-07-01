@@ -235,6 +235,8 @@ void submenu_realizar_venda(Vendas venda,Vendedores vendedores, Produtos& produt
         venda.imprimir_nota_fiscal(compradorAtual,carrinhoCompra,contadorDeProdutos,valorTotal);
         cout << "Obrigado pela compra!" << endl;
     } else if (notaFiscal=='n' || notaFiscal=='N') {
+        int codigo = venda.criar_codigoVenda();
+
         cout << "Obrigado pela compra!" << endl;
     }
 }

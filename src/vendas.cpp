@@ -422,7 +422,8 @@ void Vendas::imprimir_no_documento(int codigoV,int codigoVR, string nome, float 
     arquivo << "Frete: " << calcular_frete(valorT)<<"\n";
     arquivo << "Valor Total: " << valorT+calcular_frete(valorT)<<"\n";
     arquivo << "---\n";
-    // talvez colocar função que seta a comissão do vendedor automaticamente.
+    Vendedores vendedores;
+    vendedores.adicionarComissaoPorNumero(codigoVR,valorT);
     arquivo.close();
     cout << "Venda registrada com sucesso! Codigo gerado: "<< codigoV<< endl;
 }
@@ -430,6 +431,7 @@ void Vendas::imprimir_no_documento(int codigoV,int codigoVR, string nome, float 
 void Vendas::imprimir_nota_fiscal(Comprador compradorAtual,ItemVenda carrinho[],int contadorDeProdutos, float valorCompra) {
     string nomeArquivo = "NotaFiscal"+compradorAtual.getCpf()+".txt";
     ofstream arquivo(nomeArquivo);
+    int codigoVendaAtual = criar_codigoVenda();
     if (!arquivo.is_open()) {
         cerr << "Erro ao criar a nota fiscal"<<endl;
         return;
@@ -439,7 +441,7 @@ void Vendas::imprimir_nota_fiscal(Comprador compradorAtual,ItemVenda carrinho[],
     arquivo << "              NOTA FISCAL" << endl;
     arquivo << "==========================================="<< endl;
     arquivo << "\n";
-    arquivo << "Codigo da Venda: " << criar_codigoVenda() << endl;
+    arquivo << "Codigo da Venda: " << codigoVendaAtual << endl;
     arquivo << "\n";
     arquivo << "Comprador(a):"<<endl;
     arquivo << "Nome: " << compradorAtual.getNome() << endl;
@@ -462,8 +464,31 @@ void Vendas::imprimir_nota_fiscal(Comprador compradorAtual,ItemVenda carrinho[],
     arquivo << "Frete: R$ " << calcular_frete(valorCompra) << endl;
     arquivo << "Total da Compra: R$ " << calcular_frete(valorCompra)+valorCompra << endl;
     arquivo << "===========================================" << endl;
-
+    salvar_venda_usuario(codigoVendaAtual,compradorAtual.getNome(),carrinho,contadorDeProdutos,valorCompra);
     delete[] carrinho;
     arquivo.close();
     cout << "Nota fiscal gerada com sucesso: " << nomeArquivo << endl;
+}
+void Vendas::salvar_venda_usuario(int codigoV, string nomeUsuario,ItemVenda carrinho[], int contadorDeProdutos, float valorCompra) {
+    ofstream arquivo("../data/vendas.txt", ios::app);
+    if (!arquivo.is_open()) {
+        cerr << "Erro ao abrir o arquivo" << endl;
+        return;
+    }
+    arquivo << "Venda:\n";
+    arquivo << "Codigo: " << codigoV << "\n";
+    arquivo << "Comprador: " << nomeUsuario << "\n";
+    arquivo << "Itens:\n";
+    for (int i = 0;i<contadorDeProdutos; i++) {
+        arquivo << " - Codigo: " << carrinho[i].codigoProduto
+               << " | Nome: " << carrinho[i].nomeProduto
+               << " | Qtd: " << carrinho[i].quantidadeVendida
+               << " | Unitario: " << fixed << setprecision(2) << carrinho[i].precoUnitario
+               << " | Total: " << carrinho[i].precoTotal << "\n";
+    }
+    arquivo << "Frete: " << calcular_frete(valorCompra)<<"\n";
+    arquivo << "Valor Total: " << valorCompra+calcular_frete(valorCompra)<<"\n";
+    arquivo << "---\n";
+    arquivo.close();
+    cout << "Venda registrada com sucesso! Codigo gerado: "<< codigoV<< endl;
 }
