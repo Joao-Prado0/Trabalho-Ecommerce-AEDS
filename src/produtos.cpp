@@ -359,17 +359,16 @@ void Produtos::excluir_produto_interface() {
     }
 }
 
-// Função para verificar se há quantidade suficiente de um produto no estoque
 bool Produtos::verificar_quantidade(int codigo, int quantidade_desejada) {
     for (const auto& p : lista_produtos) {
         if (p.codigo == codigo) {
             return p.quantidadeEstoque >= quantidade_desejada;
         }
     }
-    return false; // Produto não encontrado
+    return false;
 }
 
-// Função para confirmar a venda e atualizar o estoque
+
 bool Produtos::confirmar_venda(int codigo, int quantidade_vendida) {
     for (auto& p : lista_produtos) {
         if (p.codigo == codigo) {
@@ -378,10 +377,10 @@ bool Produtos::confirmar_venda(int codigo, int quantidade_vendida) {
                 salvar_produtos();
                 return true;
             } else {
-                return false; // Não há estoque suficiente
+                return false;
             }
         }
     }
-    return false; // Produto não encontrado
+    return false;
 }
 

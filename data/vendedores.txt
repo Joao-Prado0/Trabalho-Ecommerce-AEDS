@@ -1,9 +1,9 @@
 Vendedor
 Numero: 454
 Nome: Joao Prado
-Salário fixo: 10000.00
-Comissão acumulada: 240.00
-Salário total (fixo + comissão): 10240.00
+Salario fixo: 10000.00
+Comissao acumulada: 240.00
+Salario total (fixo + comissao): 10240.00
 ------------------------------
 Vendedor
 Numero: 747
@@ -16,13 +16,13 @@ Vendedor
 Numero: 999
 Nome: Davizin
 Salario fixo: 7987.00
-Comissao acumulada: 0.00
-Salario total (fixo + comissao): 7987.00
+Comissao acumulada: 120.00
+Salario total (fixo + comissao): 8107.00
 ------------------------------
 Vendedor
 Numero: 273
 Nome: Daniel Rodrigues
 Salario fixo: 3500.00
-Comissao acumulada: 45.00
-Salario total (fixo + comissao): 3545.00
+Comissao acumulada: 58.80
+Salario total (fixo + comissao): 3558.80
 ------------------------------

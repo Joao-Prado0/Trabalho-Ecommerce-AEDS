@@ -1,7 +1,7 @@
 Produto:
 Codigo: 1001
 Nome: Smartphone Samsung Galaxy S23
-Estoque: 10
+Estoque: 9
 Preco: 3999.90
 ---
 Produto:
@@ -25,12 +25,12 @@ Preco: 799.90
 Produto:
 Codigo: 1005
 Nome: SSD Kingston NV2 1TB M.2 NVMe
-Estoque: 10
+Estoque: 9
 Preco: 459.90
 ---
 Produto:
 Codigo: 1006
 Nome: PS5 Slim
-Estoque: 15
+Estoque: 13
 Preco: 3600.00
 ---

@@ -1,6 +1,4 @@
 Comprador:
-<<<<<<< HEAD
-=======
 Nome: Joao Prado Campos
 CPF: 1442224121
 Email: joaopradocampos@gmail.com
@@ -11,7 +9,6 @@ Estado: MG
 CEP: 3042211
 ---
 Comprador:
->>>>>>> 9b0e534a29931570ef3446093a9a540427740dff
 Nome: teste
 CPF: 123456
 Email: teste@gmail.com
@@ -22,16 +19,22 @@ Estado: tg
 CEP: 6543217
 ---
 Comprador:
-Nome: pedor
-CPF: 76594373
-Email: pedro@gmail.com
-Rua: nova
-Bairro: coreu
-Cidade: bh
-Estado: mg
-CEP: 784822
-<<<<<<< HEAD
+Nome: Daniel de Souza
+CPF: 12243321109
+Email: Danielsouzan@gmail.com
+Rua: Rua olegario maciel
+Bairro: Centro
+Cidade: Ipatinga
+Estado: MG
+CEP: 32144088
 ---
-=======
+Comprador:
+Nome: Davi Martins de Almeida
+CPF: 1223443121
+Email: Davizin@gmail.com
+Rua: Av Usmain Dembele
+Bairro: Tribo
+Cidade: Itaquatiringa
+Estado: MT
+CEP: 22102076
 ---
->>>>>>> 9b0e534a29931570ef3446093a9a540427740dff

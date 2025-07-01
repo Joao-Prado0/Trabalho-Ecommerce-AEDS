@@ -3,6 +3,7 @@
 #include "compradores.h"
 #include "vendas.h"
 #include "vendedores.h"
+
 using namespace std;
 
 void submenu_produtos(Produtos& produtos) {
@@ -165,20 +166,20 @@ void submenu_vendas(Vendas venda) {
         }
     } while(opcao != 0);
 }
-void submenu_realizar_venda(Vendas venda,Vendedores vendedores, Produtos& produto, Comprador compradorAtual) {
+void submenu_realizar_venda(Vendas& venda,Vendedores& vendedores, Produtos& produto, Comprador compradorAtual) {
     string cpfComprador, nomeComprador;
     bool usuarioValido = false;
     do {
         cout << "Informe seu CPF: ";
         cin >> cpfComprador;
+        cin.ignore();
         compradorAtual = Comprador::buscarCompradorPorCPF(cpfComprador);
         if (!compradorAtual.getCpf().empty()) {
             usuarioValido = true;
         } else {
             cout << "CPF não encontrado. Insira um cpf cadastrado ou cadastre um novo usuário.\n";
         }
-        cin.ignore();
-        system("cls");
+
     } while (!usuarioValido);
     //-------------------------------------------------------------------------------------
     int maxItens = 100;
@@ -187,10 +188,11 @@ void submenu_realizar_venda(Vendas venda,Vendedores vendedores, Produtos& produt
     int  quantidadeProd;
     int  contadorDeProdutos = 0;
     float valorTotal = 0.00f;
-     while (codigoProduto!=0 && contadorDeProdutos<maxItens){
+     while (true){
         produto.listar_produtos();
         cout <<"Insira codigo do produto desejado (caso deseje finalizar a compra insira 0):"<<endl;
         cin >> codigoProduto;
+         cin.ignore();
          if (codigoProduto==0) break;
 
         Produto prod = produto.consultar_produto(codigoProduto);
@@ -199,8 +201,14 @@ void submenu_realizar_venda(Vendas venda,Vendedores vendedores, Produtos& produt
             continue;
         }
 
-         cout << "Quantidade Desejada";
+         cout << "Quantidade Desejada: ";
          cin >> quantidadeProd;
+         cin.ignore();
+         if (!produto.verificar_quantidade(prod.codigo,quantidadeProd)) {
+             cout<<"Desculpa! Não temos a quantidade solicitada desse produto no momento."<<endl;
+             continue;
+         }
+         produto.confirmar_venda(prod.codigo,quantidadeProd);
 
          ItemVenda item;
          item.codigoProduto     = prod.codigo;
@@ -208,37 +216,41 @@ void submenu_realizar_venda(Vendas venda,Vendedores vendedores, Produtos& produt
          item.quantidadeVendida = quantidadeProd;
          item.precoUnitario     = prod.precoVenda;
          item.precoTotal        = quantidadeProd * prod.precoVenda;
+
          carrinhoCompra[contadorDeProdutos] = item;
-         system("cls");
          contadorDeProdutos++;
          valorTotal += item.precoTotal;
+
+         if (contadorDeProdutos==maxItens) break;
     }
     // ---------------------------------------------------------
     bool vendedorValido = false;
     int codigoVendedor;
     do {
         vendedores.listarTodosVendedores();
-        cout << "Insira o codigo do vendedor que te atendeu" << endl;
+        cout << "Insira o codigo do vendedor que te atendeu: ";
         cin >> codigoVendedor;
         if (vendedores.verificarNumero(codigoVendedor)) {
             vendedorValido = true;
             vendedores.adicionarComissaoPorNumero(codigoVendedor,valorTotal);
         } else {
-            cout << "Insira um codigo valido" << endl;
+            cout << "Insira um codigo valido: ";
         }
     } while (!vendedorValido);
 //----------------------------------------------------------------------
     char notaFiscal;
     cout<<"Deseja gerar nota fiscal? (digite s (sim) ou n (nao))"<<endl;
+    cin.ignore();
     cin >> notaFiscal;
     if (notaFiscal=='s' || notaFiscal=='S') {
         venda.imprimir_nota_fiscal(compradorAtual,carrinhoCompra,contadorDeProdutos,valorTotal);
         cout << "Obrigado pela compra!" << endl;
     } else if (notaFiscal=='n' || notaFiscal=='N') {
         int codigo = venda.criar_codigoVenda();
-
+        venda.salvar_venda_usuario(codigo,compradorAtual.getNome(),carrinhoCompra,contadorDeProdutos,valorTotal);
         cout << "Obrigado pela compra!" << endl;
     }
+    delete[] carrinhoCompra;
 }
 int main() {
     cout << "=== PROGRAMA INICIADO - VERSAO ATUALIZADA ===" << endl;

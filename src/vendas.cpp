@@ -465,7 +465,6 @@ void Vendas::imprimir_nota_fiscal(Comprador compradorAtual,ItemVenda carrinho[],
     arquivo << "Total da Compra: R$ " << calcular_frete(valorCompra)+valorCompra << endl;
     arquivo << "===========================================" << endl;
     salvar_venda_usuario(codigoVendaAtual,compradorAtual.getNome(),carrinho,contadorDeProdutos,valorCompra);
-    delete[] carrinho;
     arquivo.close();
     cout << "Nota fiscal gerada com sucesso: " << nomeArquivo << endl;
 }
