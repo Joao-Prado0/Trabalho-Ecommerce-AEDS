@@ -33,8 +33,6 @@ class Vendas {
 
         bool verificar_codigo(int codigo);
 
-        Vendas inicializar_com_codigo(int codigoV);
-
         void consultar_venda(int codigoV);
 
         void alterar_venda(int codigoV);

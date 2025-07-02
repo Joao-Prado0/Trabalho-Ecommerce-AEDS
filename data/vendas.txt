@@ -40,3 +40,12 @@ Itens:
 Frete: 0.00
 Valor Total: 459.90
 ---
+Venda:
+Codigo: 626
+Comprador: Joao Prado Campos
+Itens:
+ - Codigo: 1006 | Nome: PS5 Slim | Qtd: 1 | Unitario: 3600.00 | Total: 3600.00
+ - Codigo: 1005 | Nome: SSD Kingston NV2 1TB M.2 NVMe | Qtd: 2 | Unitario: 459.90 | Total: 919.80
+Frete: 0.00
+Valor Total: 4519.80
+---
