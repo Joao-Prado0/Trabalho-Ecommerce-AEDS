@@ -177,7 +177,7 @@ void submenu_realizar_venda(Vendas& venda,Vendedores& vendedores, Produtos& prod
         if (!compradorAtual.getCpf().empty()) {
             usuarioValido = true;
         } else {
-            cout << "CPF não encontrado. Insira um cpf cadastrado ou cadastre um novo usuário.\n";
+            cout << "CPF nao encontrado. Insira um cpf cadastrado ou cadastre um novo usuario.\n";
         }
 
     } while (!usuarioValido);

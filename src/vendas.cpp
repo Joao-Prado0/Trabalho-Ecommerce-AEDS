@@ -150,10 +150,10 @@ void Vendas::alterar_venda(int codigoV) {
                 alterar_itens_venda(codigoV);
                 break;
             case 0:
-                cout << "Saindo da edição." << endl;
+                cout << "Saindo da edicao." << endl;
                 break;
             default:
-                cout << "Opção inválida!" << endl;
+                cout << "Opção invalida!" << endl;
         }
     } while (opcao != 0);
 
