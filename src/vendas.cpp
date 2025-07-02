@@ -24,10 +24,10 @@ int Vendas::criar_codigoVenda() {
     return codigo;
 }
 float Vendas::calcular_frete(float valorT) {
-    if (valorT<=100.00) {
+    if (valorT<=1000.00) {
         return 30.00;
     }
-    if (valorT>100.00 && valorT<=300.00) {
+    if (valorT>1000.00 && valorT<=1500.00) {
         return 20.00;
     }
     return 0.00;
