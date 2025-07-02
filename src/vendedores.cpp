@@ -170,8 +170,8 @@ void Vendedores::adicionarComissaoPorNumero(int numeroVendedor, float valorVenda
 
     remove("../data/vendedores.txt");
     rename("../data/temp.txt", "../data/vendedores.txt");
-
 }
+
 void Vendedores::adicionarComissao(float valorVenda) {
     adicionarComissaoPorNumero(this->numero, valorVenda);
 }
@@ -349,7 +349,6 @@ void Vendedores::listarTodosVendedores() {
         if (linha == "Vendedor") {
             encontrouVendedor = true;
 
-            // Ler número
             getline(arquivo, linha);
             string codigo = linha.substr(8);
 
@@ -359,7 +358,6 @@ void Vendedores::listarTodosVendedores() {
 
             cout << left << setw(10) << codigo << nome << endl;
 
-            // Pular as linhas restantes do registro (4 linhas: salário, comissão, total, separador)
             for (int i = 0; i < 4; i++) {
                 if (!getline(arquivo, linha)) break;
             }
