@@ -16,8 +16,8 @@ Vendedor
 Numero: 999
 Nome: Davizin
 Salario fixo: 7987.00
-Comissao acumulada: 255.59
-Salario total (fixo + comissao): 8242.59
+Comissao acumulada: 471.59
+Salario total (fixo + comissao): 8458.59
 ------------------------------
 Vendedor
 Numero: 273

@@ -49,3 +49,11 @@ Itens:
 Frete: 0.00
 Valor Total: 4519.80
 ---
+Venda:
+Codigo: 144
+Comprador: Joao Prado
+Itens:
+ - Codigo: 1006 | Nome: PS5 Slim | Qtd: 1 | Unitario: 3600.00 | Total: 3600.00
+Frete: 0.00
+Valor Total: 3600.00
+---

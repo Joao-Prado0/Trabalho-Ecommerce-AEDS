@@ -38,3 +38,4 @@ Cidade: Itaquatiringa
 Estado: MT
 CEP: 22102076
 ---
+numeric_limits<streamsize>::max(), '\n'

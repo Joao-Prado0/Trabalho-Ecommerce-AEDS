@@ -313,6 +313,8 @@ void Vendas::deletar_venda(int codigoV) {
     cout << "Venda removida com sucesso!" << endl;
 }
 void Vendas::inserir_venda_manualmente() {
+    Vendedores vendedores;
+    Produtos produtoObj;
     int diferentesProdutos, codigoVR;
     float valorT = 0.0f;
     string nome;
@@ -321,7 +323,7 @@ void Vendas::inserir_venda_manualmente() {
     while (true) {
         cout << "Insira o numero de produtos comprados: " << endl;
         if (cin >> diferentesProdutos) {
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin.ignore();
             if (diferentesProdutos > 0) {
                 break;
             }
@@ -329,31 +331,35 @@ void Vendas::inserir_venda_manualmente() {
         } else {
             cout << "Entrada invalida! Digite um numero valido." << endl;
             cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin.ignore();
         }
     }
 
     ItemVenda* produtos = new ItemVenda[diferentesProdutos];
 
     for (int i = 0; i < diferentesProdutos; i++) {
+        Produto prodAtual;
+        produtoObj.listar_produtos();
         cout << "\nProduto " << i+1 << ":\n";
         while (true) {
             cout << "Codigo: ";
-            if (cin >> produtos[i].codigoProduto) {
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin >> produtos[i].codigoProduto;
+            prodAtual = produtoObj.consultar_produto(produtos[i].codigoProduto);
+            if (prodAtual.encontrado){
+                cin.ignore();
                 break;
             }
             cout << "Codigo invalido! Digite um numero." << endl;
             cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin.ignore();
         }
-        cout << "Nome: ";
-        getline(cin, produtos[i].nomeProduto);
+        prodAtual = produtoObj.consultar_produto(produtos[i].codigoProduto);
+        produtos[i].nomeProduto = prodAtual.nome;
 
         while (true) {
             cout << "Quantidade: ";
             if (cin >> produtos[i].quantidadeVendida) {
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cin.ignore();
                 if (produtos[i].quantidadeVendida > 0) {
                     break;
                 }
@@ -361,25 +367,12 @@ void Vendas::inserir_venda_manualmente() {
             } else {
                 cout << "Quantidade invalida! Digite um numero." << endl;
                 cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cin.ignore();
             }
         }
 
-        while (true) {
-            cout << "Preco Unitario: ";
-            if (cin >> produtos[i].precoUnitario) {
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                if (produtos[i].precoUnitario > 0) {
-                    break;
-                }
-                cout << "Preco deve ser maior que zero!" << endl;
-            } else {
-                cout << "Preco invalido! Digite um numero." << endl;
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            }
-        }
-
+        produtos[i].precoUnitario = prodAtual.precoVenda;
+        produtoObj.confirmar_venda(produtos[i].codigoProduto,produtos[i].quantidadeVendida);
         produtos[i].precoTotal = produtos[i].quantidadeVendida * produtos[i].precoUnitario;
         valorT += produtos[i].precoTotal;
     }
@@ -388,16 +381,19 @@ void Vendas::inserir_venda_manualmente() {
     getline(cin, nome);
 
     while (true) {
+        vendedores.listarTodosVendedores();
         cout << "Insira o codigo do vendedor: " << endl;
-        if (cin >> codigoVR) {
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin >> codigoVR;
+        cin.ignore();
+        if (vendedores.verificarNumero(codigoVR)) {
             break;
         } else {
             cout << "Codigo invalido! Digite um numero." << endl;
             cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin.ignore();
         }
     }
+    vendedores.adicionarComissaoPorNumero(codigoVR,valorT);
 
     imprimir_no_documento(codigoV, codigoVR, nome, valorT, produtos, diferentesProdutos);
     delete[] produtos;

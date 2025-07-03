@@ -197,7 +197,7 @@ void submenu_realizar_venda(Vendas& venda,Vendedores& vendedores, Produtos& prod
 
         Produto prod = produto.consultar_produto(codigoProduto);
         if (!prod.encontrado) {
-            cout << "Código inválido!\n";
+            cout << "Codigo invalido!\n";
             continue;
         }
 
@@ -205,7 +205,7 @@ void submenu_realizar_venda(Vendas& venda,Vendedores& vendedores, Produtos& prod
          cin >> quantidadeProd;
          cin.ignore();
          if (!produto.verificar_quantidade(prod.codigo,quantidadeProd)) {
-             cout<<"Desculpa! Não temos a quantidade solicitada desse produto no momento."<<endl;
+             cout<<"Desculpa! Nao temos a quantidade solicitada desse produto no momento."<<endl;
              continue;
          }
          produto.confirmar_venda(prod.codigo,quantidadeProd);

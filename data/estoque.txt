@@ -31,6 +31,6 @@ Preco: 459.90
 Produto:
 Codigo: 1006
 Nome: PS5 Slim
-Estoque: 12
+Estoque: 11
 Preco: 3600.00
 ---
