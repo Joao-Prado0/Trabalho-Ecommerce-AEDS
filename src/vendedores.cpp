@@ -242,7 +242,7 @@ void Vendedores::alterarVendedor(int numeroAlvo) {
                 }
 
                 cout << "Salario atual: " << bloco[3].substr(13) << "\n";
-                cout << "Novo salario (ou 0 para manter): ";
+                cout << "Novo salario (ou enter para manter): ";
                 string input;
                 getline(cin, input);
                 novoSalario = input.empty() ? stof(bloco[3].substr(13)) : stof(input);
