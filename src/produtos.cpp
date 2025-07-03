@@ -228,6 +228,10 @@ void Produtos::consultar_produto_interface() {
         if (produto.encontrado) {
             cout << "\n=== Dados do Produto ===" << endl;
             cout << "Codigo: " << produto.codigo << endl;
+            cout << "Nome: " << produto.nome << endl;
+            cout << "Quantidade em Estoque: " << produto.quantidadeEstoque << endl;
+            cout << "Preco de Venda: R$ " << fixed << setprecision(2) << produto.precoVenda << endl;
+            cout << "=========================" << endl;
         } else {
             cout << "Produto nao encontrado!" << endl;
         }
